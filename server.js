@@ -21,7 +21,7 @@ async function main() {
 main();
 
 app.get("/", (req, res)=>{
-  res.send("Welcome to PPD server")
+  res.send("Welcome to dotplayplay Live server")
 })
 
 
