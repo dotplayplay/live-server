@@ -774,7 +774,7 @@ const HandleCountDown = ( async (e)=>{
         io.emit("h_two", 18)
         io.emit("h_four", 38)
     }
-    }, 5);
+    }, 10);
 })
 
 //  =================================== All game crash handler ===================================
