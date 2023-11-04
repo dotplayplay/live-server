@@ -20,18 +20,14 @@ const PPFWallet = require("../model/PPF-wallet");
 let is_consumed = 1
 
 async function createsocket(httpServer){
-
 let hashList = []
-    
+
 const fetchHashseed = (async()=>{
     try{
         const crashes = await CrashHash.find()
         crashes.forEach(element => {
             hashList.push(element)
         });
-        // let crash_reps = crashes[crashes.length - is_consumed]
-        // let result = crashPointFromHash(crash_reps)
-        // is_consumed += 1
         return crashes
     }
     catch(error){
