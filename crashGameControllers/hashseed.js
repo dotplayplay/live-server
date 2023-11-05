@@ -1,7 +1,5 @@
 const crypto = require('crypto');
-
 const salt = "Qede00000000000w00wd001bw4dc6a1e86083f95500b096231436e9b25cbdd0075c4";
-
 let count = 0
 function crashPointFromHash(gameHash) {  
   const hash = crypto.createHmac("sha256", gameHash.game_hash).update(salt).digest("hex"); 
