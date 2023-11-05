@@ -18,7 +18,6 @@ const Wallet = require("../model/wallet")
 const USDT_wallet = require("../model/Usdt-wallet")
 const PPFWallet = require("../model/PPF-wallet");
 let is_consumed = 1
-
 async function createsocket(httpServer){
 let hashList = []
 
