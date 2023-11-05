@@ -33,12 +33,15 @@ const fetchHashseed = (async()=>{
         console.log("There no crash hash or Network issues")
     }
 })
+
 const io = new Server(httpServer, {
     cors: {
         origin:"https://dotplayplay.netlify.app"
         // origin: "http://localhost:5173"
     },
 });
+
+
 
 // ==================== fetch single active users bets ==================================
 const fetchUsersBets = (async()=>{
@@ -726,6 +729,7 @@ const HandleCountDown = ( async (e)=>{
     fetchPreviousCrashHistory()
     fetchUsersBets(detail)
     let timeSec = e
+
     let timeLoop = setInterval(() => {
     if (timeSec.toFixed(2) <= 0.1) {
         clearInterval(timeLoop);
@@ -734,7 +738,6 @@ const HandleCountDown = ( async (e)=>{
         fetch_activePlayers(detail.game_id)
         timeSec -= 0.01;
         load_animate -= 0.2
-
         io.emit("v_five", 0)
         io.emit("v_default", true)
         io.emit("v_two", 0)
