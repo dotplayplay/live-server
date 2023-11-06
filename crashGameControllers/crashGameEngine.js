@@ -720,7 +720,6 @@ const handle_h_hundred = ((speed, action)=>{
 })
 
 // ========================================= Initial loading run ------===========================================================
-
 let load_animate = 100
 const HandleCountDown = ( async (e)=>{
    let ty = hashList[hashList.length - is_consumed]
@@ -729,7 +728,6 @@ const HandleCountDown = ( async (e)=>{
     fetchPreviousCrashHistory()
     fetchUsersBets(detail)
     let timeSec = e
-
     let timeLoop = setInterval(() => {
     if (timeSec.toFixed(2) <= 0.1) {
         clearInterval(timeLoop);
