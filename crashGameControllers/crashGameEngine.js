@@ -11,16 +11,13 @@ const { handleWeeklyCashbackImplementation } = require("../profile_mangement/wee
 const CrashHash = require("../model/crash_hash")
 const CrashGame = require("../model/crashgame")
 const CrashHistory = require("../model/crash-game-history")
-const Chats = require("../model/public-chat")
 const CashBackDB = require("../model/cash_back")
-const DiceGame = require("../model/dice_game")
 const Wallet = require("../model/wallet")
 const USDT_wallet = require("../model/Usdt-wallet")
 const PPFWallet = require("../model/PPF-wallet");
 let is_consumed = 1
 async function createsocket(httpServer){
 let hashList = []
-
 const fetchHashseed = (async()=>{
     try{
         const crashes = await CrashHash.find()
@@ -34,15 +31,12 @@ const fetchHashseed = (async()=>{
     }
 })
 
-
-
 const io = new Server(httpServer, {
     cors: {
         origin:"https://dotplayplay.netlify.app"
         // origin: "http://localhost:5173"
     },
 });
-
 
 
 // ==================== fetch single active users bets ==================================
@@ -68,42 +62,22 @@ const fetchPreviousCrashHistory = (async()=>{
 
 
 const autobetWallet = (async(event)=>{
-    let wallet = await Wallet.find({user_id:event.user_id})
-
-    let old_bal = parseFloat(wallet[0].balance)
-    let win_amount = parseFloat(event.bet_amount) * 1.98
-    let update_bal = parseFloat(old_bal + win_amount).toFixed(4)
-
-    await Wallet.updateOne({user_id:event.user_id}, {
-        balance:update_bal
-    })
-
+    let current_amount; 
     if(event.token === "PPF"){
-        await PPFWallet.updateOne({ user_id:event.user_id }, {balance: update_bal });
+        let skjk = await PPFWallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 1.98
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+       await PPFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
       }
-      else if(event.token === "USDT"){
-        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: update_bal });
-    }
- setTimeout(()=>{
-    let trx_rec = {
-        user_id: event.user_id,
-        transaction_type: "Crash-Win", 
-        sender_img: "---", 
-        sender_name: "DPP_wallet", 
-        sender_balance: 0,
-        trx_amount: win_amount,
-        receiver_balance: update_bal,
-        datetime: currentTime, 
-        receiver_name: event.token,
-        receiver_img: event.token_img,
-        status: 'successful',
-        transaction_id: Math.floor(Math.random()*1000000000)+ 100000000,
-        is_sending: 0
+    
+      if(event.token === "USDT"){
+        let skjk = await USDT_wallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 1.98
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
       }
-      handleProfileTransactions(trx_rec)
- },400)
-
-     io.emit("redball_update_wallet", {update_bal, ...event})
+    
+     io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
      await CrashGame.updateOne({
         user_id:event.user_id,
         game_id:event.game_id,
@@ -139,41 +113,22 @@ const handleAuto_cashout = (async(event, point)=>{
 
 // Get player's wallet
 const GetRedtrendWallet = (async(event, game_id)=>{
-    let wallet = await Wallet.find({user_id:event.user_id})
-
-        let old_bal = wallet[0].balance
-        let win_amount = parseFloat(event.bet_amount * 1.98)
-         let update_bal = parseFloat(old_bal) + win_amount
-
-         await Wallet.updateOne({user_id:event.user_id}, {
-            balance:update_bal
-        })
+    let current_amount; 
+    if(event.token === "PPF"){
+        let skjk = await PPFWallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 1.98
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+       await PPFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
     
-        if(event.token === "PPF"){
-            await PPFWallet.updateOne({ user_id:event.user_id }, {balance: update_bal});
-          }
-          else if(event.token === "USDT"){
-            await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: update_bal});
-        }
-
-         setTimeout(()=>{
-            let trx_rec = {
-                user_id: event.user_id,
-                transaction_type: "Crash-Win", 
-                sender_img: "---", 
-                sender_name: "DPP_wallet", 
-                sender_balance: 0,
-                trx_amount: win_amount,
-                receiver_balance: update_bal,
-                datetime: currentTime, 
-                receiver_name: event.token,
-                receiver_img: event.token_img,
-                status: 'successful',
-                transaction_id: Math.floor(Math.random()*1000000000)+ 100000000,
-                is_sending: 0
-              }
-              handleProfileTransactions(trx_rec)
-         },400)
+      if(event.token === "USDT"){
+        let skjk = await USDT_wallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 1.98
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+   
 
         await CrashGame.updateOne({
             user_id:event.user_id,
@@ -187,8 +142,7 @@ const GetRedtrendWallet = (async(event, game_id)=>{
             payout:1.98,
             has_won: true
          })
-    
-    io.emit("redball_update_wallet", {update_bal, ...event})
+    io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
     io.emit("crash-all-redball-users", "is-crash")
 })
 
@@ -233,42 +187,22 @@ const handleRedTrendball = (async(game)=>{
 // ==================================================== Green Trendball section =============================================================== 
 // Get player's wallet
 const GetGreentrendWallet = (async(event, game_id)=>{
-    let wallet = await Wallet.find({user_id:event.user_id})
-
-    let old_bal =  parseFloat(wallet[0].balance)
-    let win_amount = parseFloat(event.bet_amount * 2)
-    let update_bal = parseFloat(old_bal + win_amount)
-
-    await Wallet.updateOne({user_id:event.user_id}, {
-        balance:update_bal
-    })
-
+      let current_amount; 
     if(event.token === "PPF"){
-        await PPFWallet.updateOne({ user_id:event.user_id }, {balance: update_bal });
+        let skjk = await PPFWallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 2
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+       await PPFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
       }
-      else if(event.token === "USDT"){
-        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: update_bal });
-    }
-    setTimeout(()=>{
-        let trx_rec = {
-            user_id: event.user_id,
-            transaction_type: "Crash-Win", 
-            sender_img: "---", 
-            sender_name: "DPP_wallet", 
-            sender_balance: 0,
-            trx_amount: win_amount,
-            receiver_balance: update_bal,
-            datetime: currentTime, 
-            receiver_name: event.token,
-            receiver_img: event.token_img,
-            status: 'successful',
-            transaction_id: Math.floor(Math.random()*1000000000)+ 100000000,
-            is_sending: 0
-          }
-          handleProfileTransactions(trx_rec)
-     },400)
-
-    io.emit("redball_update_wallet", {update_bal, ...event})
+    
+      if(event.token === "USDT"){
+        let skjk = await USDT_wallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 2
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+     io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
 
     await CrashGame.updateOne({
         user_id:event.user_id,
@@ -325,43 +259,22 @@ const handleGreentrendballCashout = (async(game_id)=>{
 
 // Get player's wallet
 const GetMoontrendWallet = (async(event, game_id)=>{
-    let wallet = await Wallet.find({user_id:event.user_id})
-
-    let old_bal =  parseFloat(wallet[0].balance)
-    let win_amount = parseFloat(event.bet_amount * 2)
-    let update_bal = parseFloat(old_bal + win_amount)
-
-    await Wallet.updateOne({user_id:event.user_id}, {
-        balance:update_bal
-    })
-
+    let current_amount; 
     if(event.token === "PPF"){
-        await PPFWallet.updateOne({ user_id:event.user_id }, {balance: update_bal });
+        let skjk = await PPFWallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 10
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+       await PPFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
       }
-      else if(event.token === "USDT"){
-        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: update_bal });
-    }
-
-        setTimeout(()=>{
-            let trx_rec = {
-                user_id: event.user_id,
-                transaction_type: "Crash-Win", 
-                sender_img: "---", 
-                sender_name: "DPP_wallet", 
-                sender_balance: 0,
-                trx_amount: win_amount,
-                receiver_balance: update_bal,
-                datetime: currentTime, 
-                receiver_name: event.token,
-                receiver_img: event.token_img,
-                status: 'successful',
-                transaction_id: Math.floor(Math.random()*1000000000)+ 100000000,
-                is_sending: 0
-              }
-              handleProfileTransactions(trx_rec)
-         },400)
-
-        io.emit("redball_update_wallet", {update_bal, ...event})
+    
+      if(event.token === "USDT"){
+        let skjk = await USDT_wallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 10
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+     io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
 
         await CrashGame.updateOne({
             user_id:event.user_id,
@@ -371,7 +284,7 @@ const GetMoontrendWallet = (async(event, game_id)=>{
             game_status: false,
             user_status: false,
             cashout:2,
-            profit: parseFloat(event.bet_amount) * 2,
+            profit: parseFloat(event.bet_amount) * 10,
             payout:2,
             has_won: true
          })
@@ -1063,14 +976,6 @@ if (multiplierEL >= crash_point.crashpoint) {
     }, 100);
 })
 
-const fetchActivePlayers = (async()=>{
-    let data = await DiceGame.find()
-     io.emit("dice-gamePLayers", data)
-})
-
-setInterval(()=>{
-    fetchActivePlayers()
-}, 2000)
 
 //================ weeklyCASHBACK ================
 const weeklyCashback = async () => {
@@ -1128,22 +1033,7 @@ function generateRandomNumber(serverSeed, clientSeed, hash, nonce) {
   }
   
 
-let newMessage = await Chats.find()
 
-const handleNewChatMessages = (async(data)=>{
-    io.emit("new-messages", newMessage)
-  await Chats.create(data)
-})
-
-io.on("connection", (socket)=>{
-    socket.on("message", data=>{
-        newMessage.push(data)
-        handleNewChatMessages(data)
-    })
-    socket.on("disconnect", ()=>{
-        console.log("disconnected")
-    })
-})
 
 }
 
