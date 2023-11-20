@@ -38,17 +38,17 @@ const io = new Server(httpServer, {
     },
 });
 
-
 // ==================== fetch single active users bets ==================================
 const fetchUsersBets = (async()=>{
     const data = await CrashGame.find()
-     io.emit("my-bet", data)
+    //  io.emit("my-bet", data)
 })
+
 const fetch_activePlayers = (async(game_id)=>{
     try{
-        const data = await CrashGame.find({game_id})
-        io.emit("active_players", data)
-        io.emit("crash-game-redtrend", data)
+        // const data = await CrashGame.find({game_id})
+        // io.emit("active_players", data)
+        // io.emit("crash-game-redtrend", data)
     }
     catch(error){
         console.log("Could not find games")
@@ -56,8 +56,8 @@ const fetch_activePlayers = (async(game_id)=>{
 })
 
 const fetchPreviousCrashHistory = (async()=>{
-    const data = await CrashHistory.find()
-    io.emit("crash-game-history", data)
+    // const data = await CrashHistory.find()
+    // io.emit("crash-game-history", data)
 })
 
 
@@ -77,7 +77,7 @@ const autobetWallet = (async(event)=>{
         await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
       }
     
-     io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
+    //  io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
      await CrashGame.updateOne({
         user_id:event.user_id,
         game_id:event.game_id,
@@ -90,7 +90,7 @@ const autobetWallet = (async(event)=>{
         has_won: true
      })
 
-     io.emit("crash-autobet-users", "is-crash")
+    //  io.emit("crash-autobet-users", "is-crash")
 })
 
 let auto = []
@@ -142,8 +142,8 @@ const GetRedtrendWallet = (async(event, game_id)=>{
             payout:1.98,
             has_won: true
          })
-    io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
-    io.emit("crash-all-redball-users", "is-crash")
+    // io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
+    // io.emit("crash-all-redball-users", "is-crash")
 })
 
 
@@ -152,7 +152,7 @@ const handleRedtrendballCashout = (async(game_id)=>{
     let data = await CrashGame.find({game_id:game_id,game_type:"Red"})
     for(let i = 0; i < data.length; i++){
         GetRedtrendWallet(data[i], game_id)
-        io.emit("crash-all-redball-users", "has_win")
+        // io.emit("crash-all-redball-users", "has_win")
     }
 })
 
@@ -180,7 +180,7 @@ const handleRedTrendball = (async(game)=>{
             profit:0,
             has_won:false,
          })
-        io.emit("crash-all-redball-users", "is-crash")
+        // io.emit("crash-all-redball-users", "is-crash")
     }
 })
 
@@ -202,7 +202,7 @@ const GetGreentrendWallet = (async(event, game_id)=>{
         await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
       }
     
-     io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
+    //  io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
 
     await CrashGame.updateOne({
         user_id:event.user_id,
@@ -216,7 +216,7 @@ const GetGreentrendWallet = (async(event, game_id)=>{
         payout:2,
         has_won: true
      })
-    io.emit("crash-all-redball-users", "is-crash")
+    // io.emit("crash-all-redball-users", "is-crash")
 })
 
 //================== update payout and crash hash ===========================
@@ -251,7 +251,7 @@ const handleGreentrendballCashout = (async(game_id)=>{
    let data = await CrashGame.find({game_id:game_id,game_type:"Green" })
     for(let i = 0; i < data.length; i++){
         GetGreentrendWallet(data[i], game_id)
-        io.emit("crash-all-greenball-users", "has_win")
+        // io.emit("crash-all-greenball-users", "has_win")
     }
 })
 
@@ -274,7 +274,7 @@ const GetMoontrendWallet = (async(event, game_id)=>{
         await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
       }
     
-     io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
+    //  io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
 
         await CrashGame.updateOne({
             user_id:event.user_id,
@@ -288,7 +288,7 @@ const GetMoontrendWallet = (async(event, game_id)=>{
             payout:2,
             has_won: true
          })
-    io.emit("crash-all-moonball-users", "is-crash")
+    // io.emit("crash-all-moonball-users", "is-crash")
 })
 
 // Notify winning update
@@ -296,7 +296,7 @@ const handleMoontrendballCashout = (async(game_id)=>{
     let data = await CrashGame.find({game_id:game_id,game_type:"Moon" })
        for(let i = 0; i < data.length; i++){
         GetMoontrendWallet(data[i], game_id)
-        io.emit("crash-all-moonball-users", "has_win")
+        // io.emit("crash-all-moonball-users", "has_win")
        }
 })
 
@@ -311,7 +311,7 @@ const handleMoonTrendball = (async(game)=>{
         profit:0,
         has_won:false
      })
-    io.emit("crash-all-moonball-users", "is-crash")
+    // io.emit("crash-all-moonball-users", "is-crash")
 })
 
 let cur
@@ -323,29 +323,29 @@ let count = 0
         }else{
             count = 588.6
         }
-    io.emit("nuppp-curve", count.toFixed(2))
+    // io.emit("nuppp-curve", count.toFixed(2))
     }, 3)
 }) 
 
 let v_two = 0
 const handle_V_two = ((speed, action)=>{
     v_two += speed
-    if(action){
-        io.emit("v_two", v_two)
-    }else{
-        io.emit("v_two", action)
-        v_two = 0
-    }
-    io.emit("v_default", false)
+    // if(action){
+    //     io.emit("v_two", v_two)
+    // }else{
+    //     io.emit("v_two", action)
+    //     v_two = 0
+    // }
+    // io.emit("v_default", false)
 })
 
 let v_three = 0
 const handle_V_three = ((speed, action)=>{
     v_three += speed
     if(action){
-        io.emit("v_three", v_three)
+        // io.emit("v_three", v_three)
     }else{
-        io.emit("v_three", action)
+        // io.emit("v_three", action)
         v_three = 0
     }
 })
@@ -355,10 +355,10 @@ let v_five = 0
 const handle_V_Five = ((speed, action)=>{
     v_five += speed
     if(action){
-        io.emit("v_five", v_five)
+        // io.emit("v_five", v_five)
     }else{
         v_five = 0
-        io.emit("v_five", action)
+        // io.emit("v_five", action)
     }
 })
 
@@ -366,103 +366,103 @@ const handle_V_Five = ((speed, action)=>{
 let v_seven = 0
 const handle_V_Seven = ((speed, action)=>{
     v_seven += speed
-    if(action){
-        io.emit("v_seven", v_seven)
-    }else{
-        v_seven = 0
-        io.emit("v_seven", action)
-    }
+    // if(action){
+    //     io.emit("v_seven", v_seven)
+    // }else{
+    //     v_seven = 0
+    //     io.emit("v_seven", action)
+    // }
 })
 
 let v_nine = 0
 const handle_V_Nine = ((speed, action)=>{
     v_nine += speed
-    if(action){
-        io.emit("v_nine", v_nine)
-    }else{
-        v_nine = 0
-        io.emit("v_nine", action)
-    }
+    // if(action){
+    //     io.emit("v_nine", v_nine)
+    // }else{
+    //     v_nine = 0
+    //     io.emit("v_nine", action)
+    // }
 })
 
 
 let v_ten = 0
 const handle_V_Ten = ((speed, action)=>{
     v_ten += speed
-    if(action){
-        io.emit("v_ten", v_ten)
-    }else{
-        v_ten = 0
-        io.emit("v_ten", action)
-    }
+    // if(action){
+    //     io.emit("v_ten", v_ten)
+    // }else{
+    //     v_ten = 0
+    //     io.emit("v_ten", action)
+    // }
 })
 
 let v_twenty = 0
 const handle_V_Twenty = ((speed, action)=>{
     v_twenty += speed
-    if(action){
-        io.emit("v_twenty", v_twenty)
-    }else{
-        v_twenty = 0
-        io.emit("v_twenty", action)
-    }
+    // if(action){
+    //     io.emit("v_twenty", v_twenty)
+    // }else{
+    //     v_twenty = 0
+    //     io.emit("v_twenty", action)
+    // }
 })
 
 let v_fivety = 0
 const handle_V_Fivety = ((speed, action)=>{
     v_fivety += speed
-    if(action){
-        io.emit("v_fivety", v_fivety)
-    }else{
-        v_fivety = 0
-        io.emit("v_fivety", action)
-    }
+    // if(action){
+    //     io.emit("v_fivety", v_fivety)
+    // }else{
+    //     v_fivety = 0
+    //     io.emit("v_fivety", action)
+    // }
 })
 
 let v_hundred = 0
 const handle_V_Hundred = ((speed, action)=>{
     v_hundred += speed
-    if(action){
-        io.emit("v_hundred", v_hundred)
-    }else{
-        v_hundred = 0
-        io.emit("v_hundred", action)
-    }
+    // if(action){
+    //     io.emit("v_hundred", v_hundred)
+    // }else{
+    //     v_hundred = 0
+    //     io.emit("v_hundred", action)
+    // }
 })
 
 
 let v_Twohundred = 0
 const handle_V_TwoHundred = ((speed, action)=>{
     v_Twohundred += speed
-    if(action){
-        io.emit("v_Twohundred", v_Twohundred)
-    }else{
-        v_Twohundred = 0
-        io.emit("v_Twohundred", action)
-    }
+    // if(action){
+    //     io.emit("v_Twohundred", v_Twohundred)
+    // }else{
+    //     v_Twohundred = 0
+    //     io.emit("v_Twohundred", action)
+    // }
 })
 
 
 let v_FiveHundred = 0
 const handle_V_FiveHundred = ((speed, action)=>{
     v_FiveHundred += speed
-    if(action){
-        io.emit("v_FiveHundred", v_FiveHundred)
-    }else{
-        v_FiveHundred = 0
-        io.emit("v_FiveHundred", action)
-    }
+    // if(action){
+    //     io.emit("v_FiveHundred", v_FiveHundred)
+    // }else{
+    //     v_FiveHundred = 0
+    //     io.emit("v_FiveHundred", action)
+    // }
 })
 
 let v_thousand = 0
 const handle_V_Thousand = ((speed, action)=>{
     v_thousand += speed
-    if(action){
-        io.emit("v_thousand", v_thousand)
-    }else{
-        v_thousand = 0
-        io.emit("v_thousand", action)
-    }
+    // if(action){
+    //     io.emit("v_thousand", v_thousand)
+    // }else{
+    //     v_thousand = 0
+    //     io.emit("v_thousand", action)
+    // }
 })
 
 
@@ -470,134 +470,134 @@ const handle_V_Thousand = ((speed, action)=>{
 let h_two = 18
 const handle_H_Two = ((speed, action)=>{
     h_two -= speed
-    if(action){
-        io.emit("h_two", h_two)
-    }else{
-        h_two = 18
-        io.emit("h_two", action)
-    }
+    // if(action){
+    //     io.emit("h_two", h_two)
+    // }else{
+    //     h_two = 18
+    //     io.emit("h_two", action)
+    // }
 })
 
 let h_four = 38
 const handle_H_Four = ((speed, action)=>{
     h_four -= speed
-    if(action){
-        io.emit("h_four", h_four)
-    }else{
-        h_four = 38
-        io.emit("h_four", action)
-    }
+    // if(action){
+    //     io.emit("h_four", h_four)
+    // }else{
+    //     h_four = 38
+    //     io.emit("h_four", action)
+    // }
 })
 
 
 let h_six = 58
 const handle_H_Six = ((speed, action)=>{
     h_six -= speed
-    if(action){
-        io.emit("h_six", h_six)
-    }else{
-        h_six = 58
-        io.emit("h_six", action)
-    }
+    // if(action){
+    //     io.emit("h_six", h_six)
+    // }else{
+    //     h_six = 58
+    //     io.emit("h_six", action)
+    // }
 })
 
 let h_eight = 78
 const handle_H_Eight = ((speed, action)=>{
     h_eight -= speed
-    if(action){
-        io.emit("h_eight", h_eight)
-    }else{
-        h_eight = 78
-        io.emit("h_eight", action)
-    }
+    // if(action){
+    //     io.emit("h_eight", h_eight)
+    // }else{
+    //     h_eight = 78
+    //     io.emit("h_eight", action)
+    // }
 })
 
 let h_ten = 100
 const handle_H_Ten = ((speed, action)=>{
-    h_ten -= speed
-    if(action){
-        io.emit("h_ten", h_ten)
-    }else{
-        h_ten = 100
-        io.emit("h_ten", action)
-    }
+    // h_ten -= speed
+    // if(action){
+    //     io.emit("h_ten", h_ten)
+    // }else{
+    //     h_ten = 100
+    //     io.emit("h_ten", action)
+    // }
 })
 
 let h_twelve = 100
 const handle_H_Twelve = ((speed, action)=>{
-    h_twelve -= speed
-    if(action){
-        io.emit("h_twelve", h_twelve)
-    }else{
-        h_twelve = 100
-        io.emit("h_twelve", action)
-    }
+    // h_twelve -= speed
+    // if(action){
+    //     io.emit("h_twelve", h_twelve)
+    // }else{
+    //     h_twelve = 100
+    //     io.emit("h_twelve", action)
+    // }
 })
 
 let h_fourteen = 100
 const handle_h_fourteen = ((speed, action)=>{
     h_fourteen -= speed
-    if(action){
-        io.emit("h_fourteen", h_fourteen)
-    }else{
-        h_fourteen = 100
-        io.emit("h_fourteen", action)
-    }
+    // if(action){
+    //     io.emit("h_fourteen", h_fourteen)
+    // }else{
+    //     h_fourteen = 100
+    //     io.emit("h_fourteen", action)
+    // }
 })
 
 let h_sixteen = 100
 const handle_h_sixteen = ((speed, action)=>{
     h_sixteen -= speed
-    if(action){
-        io.emit("h_sixteen", h_sixteen)
-    }else{
-        h_sixteen = 100
-        io.emit("h_sixteen", action)
-    }
+    // if(action){
+    //     io.emit("h_sixteen", h_sixteen)
+    // }else{
+    //     h_sixteen = 100
+    //     io.emit("h_sixteen", action)
+    // }
 })
 
 let h_eighteen = 100
 const handle_h_eighteen = ((speed, action)=>{
     h_eighteen -= speed
-    if(action){
-        io.emit("h_eighteen", h_eighteen)
-    }else{
-        h_eighteen = 100
-        io.emit("h_eighteen", action)
-    }
+    // if(action){
+    //     io.emit("h_eighteen", h_eighteen)
+    // }else{
+    //     h_eighteen = 100
+    //     io.emit("h_eighteen", action)
+    // }
 })
 
 let h_twenty = 100
 const handle_h_twenty = ((speed, action)=>{
     h_twenty -= speed
-    if(action){
-        io.emit("h_twenty", h_twenty)
-    }else{
-        h_twenty = 100
-        io.emit("h_twenty", action)
-    }
+    // if(action){
+    //     io.emit("h_twenty", h_twenty)
+    // }else{
+    //     h_twenty = 100
+    //     io.emit("h_twenty", action)
+    // }
 })
 
 let h_thirthy = 100
 const handle_h_thirthy = ((speed, action)=>{
     h_thirthy -= speed
-    if(action){
-        io.emit("h_thirthy", h_thirthy)
-    }else{
-        h_thirthy = 100
-        io.emit("h_thirthy", action)
-    }
+    // if(action){
+    //     io.emit("h_thirthy", h_thirthy)
+    // }else{
+    //     h_thirthy = 100
+    //     io.emit("h_thirthy", action)
+    // }
 })
 
 let h_fourty = 100
 const handle_h_fourty = ((speed, action)=>{
     h_fourty -= speed
-    if(action){
-        io.emit("h_fourty", h_fourty)
-    }else{
-        h_fourty = 100
-        io.emit("h_fourty", action)
-    }
+    // if(action){
+    //     io.emit("h_fourty", h_fourty)
+    // }else{
+    //     h_fourty = 100
+    //     io.emit("h_fourty", action)
+    // }
 })
 
 
@@ -605,33 +605,33 @@ const handle_h_fourty = ((speed, action)=>{
 let h_sixty = 100
 const handle_h_sixty = ((speed, action)=>{
     h_sixty -= speed
-    if(action){
-        io.emit("h_sixty", h_sixty)
-    }else{
-        h_sixty = 100
-        io.emit("h_sixty", action)
-    }
+    // if(action){
+    //     io.emit("h_sixty", h_sixty)
+    // }else{
+    //     h_sixty = 100
+    //     io.emit("h_sixty", action)
+    // }
 })
 
 let h_eighty = 100
 const handle_h_eighty = ((speed, action)=>{
     h_eighty -= speed
-    if(action){
-        io.emit("h_eighty", h_eighty)
-    }else{
-        io.emit("h_eighty", action)
-    }
+    // if(action){
+    //     io.emit("h_eighty", h_eighty)
+    // }else{
+    //     io.emit("h_eighty", action)
+    // }
 })
 
 
 let h_hundred = 100
 const handle_h_hundred = ((speed, action)=>{
-    h_hundred -= speed
-    if(action){
-        io.emit("h_hundred", h_hundred)
-    }else{
-        io.emit("h_hundred", action)
-    }
+    // h_hundred -= speed
+    // if(action){
+    //     io.emit("h_hundred", h_hundred)
+    // }else{
+    //     io.emit("h_hundred", action)
+    // }
 })
 
 // ========================================= Initial loading run ------===========================================================
@@ -651,39 +651,39 @@ const HandleCountDown = ( async (e)=>{
         fetch_activePlayers(detail.game_id)
         timeSec -= 0.01;
         load_animate -= 0.2
-        io.emit("v_five", 0)
-        io.emit("v_default", true)
-        io.emit("v_two", 0)
-        io.emit("v_seven", 0)
-        io.emit("v_three", 0)
-        io.emit("v_nine", 0)
-        io.emit("v_twenty", 0)
+        // io.emit("v_five", 0)
+        // io.emit("v_default", true)
+        // io.emit("v_two", 0)
+        // io.emit("v_seven", 0)
+        // io.emit("v_three", 0)
+        // io.emit("v_nine", 0)
+        // io.emit("v_twenty", 0)
         io.emit("crash-state", "load-crash")
         io.emit("countdown", timeSec)
         io.emit("load-animation", load_animate)
         io.emit("game_id", detail.game_id)
-        io.emit("v_ten", 0)
-        io.emit("v_hundred", 0)
-        io.emit("v_FiveHundred", 0)
-        io.emit("v_thousand", 0)
-        io.emit("v_fivety", 0)
-        io.emit("v_Twohundred", 0)
+        // io.emit("v_ten", 0)
+        // io.emit("v_hundred", 0)
+        // io.emit("v_FiveHundred", 0)
+        // io.emit("v_thousand", 0)
+        // io.emit("v_fivety", 0)
+        // io.emit("v_Twohundred", 0)
         
-        io.emit("h_hundred", 0)
-        io.emit("h_eighty", 0)
-        io.emit("h_sixty", 0)
-        io.emit("h_thirthy", 0)
-        io.emit("h_fourty", 0)
-        io.emit("h_twenty", 0)
-        io.emit("h_eighteen", 0)
-        io.emit("h_sixteen", 0)
-        io.emit("h_fourteen", 0)
-        io.emit("h_ten", 0)
-        io.emit("h_twelve", 0)
-        io.emit("h_eight", 78)
-        io.emit("h_six", 58)
-        io.emit("h_two", 18)
-        io.emit("h_four", 38)
+        // io.emit("h_hundred", 0)
+        // io.emit("h_eighty", 0)
+        // io.emit("h_sixty", 0)
+        // io.emit("h_thirthy", 0)
+        // io.emit("h_fourty", 0)
+        // io.emit("h_twenty", 0)
+        // io.emit("h_eighteen", 0)
+        // io.emit("h_sixteen", 0)
+        // io.emit("h_fourteen", 0)
+        // io.emit("h_ten", 0)
+        // io.emit("h_twelve", 0)
+        // io.emit("h_eight", 78)
+        // io.emit("h_six", 58)
+        // io.emit("h_two", 18)
+        // io.emit("h_four", 38)
     }
     }, 10);
 })
@@ -998,7 +998,7 @@ const weeklyCashback = async () => {
 }
 }
 
-setInterval(() => weeklyCashback(), 1000);
+// setInterval(() => weeklyCashback(), 1000);
 
 //================ weeklyCASHBACK ================
 const monthlyCashback = async () => {
@@ -1016,11 +1016,11 @@ const monthlyCashback = async () => {
         if (new Date().getDate() === 1) {
             handleMonthlyCashbackImplementation()
         }else{
-            io.emit("monthly-count-down", `${ days !== 0 ? days + "d" : ""} ${hours}h ${minutes}m ${seconds}s`)
+            // io.emit("monthly-count-down", `${ days !== 0 ? days + "d" : ""} ${hours}h ${minutes}m ${seconds}s`)
         }
     }
 }
-setInterval(() => monthlyCashback(), 1000);
+// setInterval(() => monthlyCashback(), 1000);
 
 function generateRandomNumber(serverSeed, clientSeed, hash, nonce) {
     const combinedSeed = `${serverSeed}-${clientSeed}-${hash}-${nonce}`;
