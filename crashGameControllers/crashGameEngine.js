@@ -640,6 +640,7 @@ const HandleCountDown = ( async (e)=>{
    let ty = hashList[hashList.length - is_consumed]
     let detail = crashPointFromHash(ty)
     is_consumed += 1
+    io.emit("crash-point", 0)
     fetchPreviousCrashHistory()
     fetchUsersBets(detail)
     let timeSec = e
@@ -647,10 +648,11 @@ const HandleCountDown = ( async (e)=>{
     if (timeSec.toFixed(2) <= 0.1) {
         clearInterval(timeLoop);
         handleMultiplier(detail)
+        io.emit("countdown", 0)
     }else{
         fetch_activePlayers(detail.game_id)
         timeSec -= 0.01;
-        load_animate -= 0.17
+        load_animate -= 0.198
         // io.emit("v_five", 0)
         // io.emit("v_default", true)
         // io.emit("v_two", 0)
@@ -658,7 +660,6 @@ const HandleCountDown = ( async (e)=>{
         // io.emit("v_three", 0)
         // io.emit("v_nine", 0)
         // io.emit("v_twenty", 0)
-        io.emit("crash-state", "load-crash")
         io.emit("countdown", timeSec)
         io.emit("load-animation", load_animate)
         io.emit("game_id", detail.game_id)
@@ -692,7 +693,7 @@ const HandleCountDown = ( async (e)=>{
 
 const handleCrashed = ((crash_point)=>{
     let data = { game_id: crash_point.game_id, game_hash: crash_point.hash }
-    io.emit("crash-state", "hasCrashed")
+    io.emit("running-crash", 0)
     io.emit("crash-point", crash_point.crashpoint)
     io.emit("crash-details", data)
     handleCrashHistory(crash_point)
@@ -768,7 +769,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         fetch_activePlayers(crash_point.game_id)
         handleAuto_cashout( multiplierEL.toFixed(2), crash_point.game_id)
         if( multiplierEL.toFixed(2) > 1.98 &&  multiplierEL.toFixed(2) < 2.99  ){
-            speed = 0.0212
+            speed = 0.011
             handle_V_two(0.8, 1)
             handleRedTrendball(crash_point)
             const called = (()=>{
@@ -776,7 +777,7 @@ if (multiplierEL >= crash_point.crashpoint) {
                     handleGreentrendballCashout(crash_point.game_id)
                     trigger = 0
                 }
-            })
+        })
             called()
             if(multiplierEL.toFixed(2) > 2.36 && multiplierEL.toFixed(2) < 2.76){
                 handle_H_Twelve(1.2, 1)
@@ -804,7 +805,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         }
 
         else if ( multiplierEL.toFixed(2) > 2.99 &&  multiplierEL.toFixed(2) < 4.99 ){
-            speed = 0.02512
+            speed = 0.021
             if(multiplierEL.toFixed(2) > 4.5){
                 handle_V_two(0.6, 0)
                 handle_H_Two(0.02, 1)
@@ -844,7 +845,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         }
 
         else if ( multiplierEL.toFixed(2) > 4.99 &&  multiplierEL.toFixed(2) < 6.99 ){
-            speed = 0.03123
+            speed = 0.031
             handle_V_three(0.4, 1)
             handle_V_Five(0.73, 1)
             if(multiplierEL.toFixed(2) > 6.2 && multiplierEL.toFixed(2) < 5.5 ){
@@ -868,7 +869,7 @@ if (multiplierEL >= crash_point.crashpoint) {
             }
         }
         else if ( multiplierEL.toFixed(2) > 6.99 &&  multiplierEL.toFixed(2) < 9.99 ){
-            speed = 0.051234
+            speed = 0.0481
             if(multiplierEL.toFixed(2) > 9){
                 handle_V_Nine(0.6, 1)
             }
@@ -897,7 +898,7 @@ if (multiplierEL >= crash_point.crashpoint) {
             handle_h_twenty(0.3, 1)
         }
         else if ( multiplierEL.toFixed(2) > 14.99 &&  multiplierEL.toFixed(2) < 19.99 ){
-            speed = 0.09123
+            speed = 0.08723
             handle_V_Ten(0.6, 1)
             handle_h_thirthy(0.3, 1)
             handle_h_twenty(0.3, 1)
@@ -920,7 +921,7 @@ if (multiplierEL >= crash_point.crashpoint) {
        
         }
         else if ( multiplierEL.toFixed(2) > 50.99 &&  multiplierEL.toFixed(2) < 100.99 ){
-            speed = 0.15126
+            speed = 0.131
             if( multiplierEL.toFixed(2) > 70.99 ){
                 handle_V_Fivety(0.2, 1)
                 handle_h_fourty(0.3, 1)
@@ -959,21 +960,19 @@ if (multiplierEL >= crash_point.crashpoint) {
         }
         if(multiplierEL.toFixed(2) > 500 && multiplierEL.toFixed(2) < 1000){
             speed = 0.41206
-
             handle_h_sixty(0.06, 1)
             handle_V_TwoHundred(0.17, 0)
             handle_V_FiveHundred(0.07 , 1)
         }
          if(multiplierEL.toFixed(2) > 1000 ){
-             speed = 0.52312
+             speed = 0.51312
              handle_V_FiveHundred(0.05 , 0)
              handle_V_Thousand(0.05, 1)
          } 
-            io.emit("crash-state", "crash-isRunning")
             io.emit("running-crash", multiplierEL.toFixed(2))
      }
      multiplierEL  += speed;
-    }, 100);
+    }, 90);
 })
 
 
