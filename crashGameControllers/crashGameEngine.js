@@ -323,7 +323,7 @@ let count = 0
         }else{
             count = 588.6
         }
-    // io.emit("nuppp-curve", count.toFixed(2))
+    io.emit("nuppp-curve", count.toFixed(2))
     }, 3)
 }) 
 
