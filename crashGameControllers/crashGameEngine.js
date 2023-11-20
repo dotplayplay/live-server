@@ -319,12 +319,12 @@ const HandlecrashCurve = ((event)=>{
 let count = 0
     cur = setInterval(()=>{
         if(count < 590){
-            count += 0.7
+            count += 0.34
         }else{
             count = 588.6
         }
     io.emit("nuppp-curve", count.toFixed(2))
-    }, 3)
+    }, 5)
 }) 
 
 let v_two = 0
@@ -650,7 +650,7 @@ const HandleCountDown = ( async (e)=>{
     }else{
         fetch_activePlayers(detail.game_id)
         timeSec -= 0.01;
-        load_animate -= 0.2
+        load_animate -= 0.17
         // io.emit("v_five", 0)
         // io.emit("v_default", true)
         // io.emit("v_two", 0)
@@ -768,7 +768,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         fetch_activePlayers(crash_point.game_id)
         handleAuto_cashout( multiplierEL.toFixed(2), crash_point.game_id)
         if( multiplierEL.toFixed(2) > 1.98 &&  multiplierEL.toFixed(2) < 2.99  ){
-            speed = 0.02
+            speed = 0.0212
             handle_V_two(0.8, 1)
             handleRedTrendball(crash_point)
             const called = (()=>{
@@ -804,7 +804,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         }
 
         else if ( multiplierEL.toFixed(2) > 2.99 &&  multiplierEL.toFixed(2) < 4.99 ){
-            speed = 0.0276
+            speed = 0.02512
             if(multiplierEL.toFixed(2) > 4.5){
                 handle_V_two(0.6, 0)
                 handle_H_Two(0.02, 1)
@@ -844,7 +844,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         }
 
         else if ( multiplierEL.toFixed(2) > 4.99 &&  multiplierEL.toFixed(2) < 6.99 ){
-            speed = 0.0356
+            speed = 0.03123
             handle_V_three(0.4, 1)
             handle_V_Five(0.73, 1)
             if(multiplierEL.toFixed(2) > 6.2 && multiplierEL.toFixed(2) < 5.5 ){
@@ -868,7 +868,7 @@ if (multiplierEL >= crash_point.crashpoint) {
             }
         }
         else if ( multiplierEL.toFixed(2) > 6.99 &&  multiplierEL.toFixed(2) < 9.99 ){
-            speed = 0.0596
+            speed = 0.051234
             if(multiplierEL.toFixed(2) > 9){
                 handle_V_Nine(0.6, 1)
             }
@@ -879,7 +879,7 @@ if (multiplierEL >= crash_point.crashpoint) {
             handle_H_Ten(0.3, 1)
         }
         else if ( multiplierEL.toFixed(2) > 9.99 &&  multiplierEL.toFixed(2) < 14.99 ){
-            speed = 0.0806
+            speed = 0.07232
             handle_V_three(0.16, 0)
             handle_V_Five(0.3, 0)
             handle_V_Seven(0.7, 0)
@@ -897,7 +897,7 @@ if (multiplierEL >= crash_point.crashpoint) {
             handle_h_twenty(0.3, 1)
         }
         else if ( multiplierEL.toFixed(2) > 14.99 &&  multiplierEL.toFixed(2) < 19.99 ){
-            speed = 0.0967
+            speed = 0.09123
             handle_V_Ten(0.6, 1)
             handle_h_thirthy(0.3, 1)
             handle_h_twenty(0.3, 1)
@@ -920,7 +920,7 @@ if (multiplierEL >= crash_point.crashpoint) {
        
         }
         else if ( multiplierEL.toFixed(2) > 50.99 &&  multiplierEL.toFixed(2) < 100.99 ){
-            speed = 0.1556
+            speed = 0.15126
             if( multiplierEL.toFixed(2) > 70.99 ){
                 handle_V_Fivety(0.2, 1)
                 handle_h_fourty(0.3, 1)
@@ -935,7 +935,7 @@ if (multiplierEL >= crash_point.crashpoint) {
             }
         }
         else if ( multiplierEL.toFixed(2) > 100.99 && multiplierEL.toFixed(2) < 200){
-            speed = 0.256
+            speed = 0.21236
             if( multiplierEL.toFixed(2) > 150.99 ){
                 handle_V_Hundred(0.16, 1)
             }else{
@@ -948,7 +948,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         }
         if(multiplierEL.toFixed(2) > 200 && multiplierEL.toFixed(2) < 500){
             handle_V_Hundred(0.1, 0)
-            speed = 0.306
+            speed = 0.31236
             if( multiplierEL.toFixed(2) > 250.99 ){
                 handle_h_fourty(0.01, 0)
                 handle_V_TwoHundred(0.07, 1)
@@ -958,14 +958,14 @@ if (multiplierEL >= crash_point.crashpoint) {
             }
         }
         if(multiplierEL.toFixed(2) > 500 && multiplierEL.toFixed(2) < 1000){
-            speed = 0.406
+            speed = 0.41206
 
             handle_h_sixty(0.06, 1)
             handle_V_TwoHundred(0.17, 0)
             handle_V_FiveHundred(0.07 , 1)
         }
          if(multiplierEL.toFixed(2) > 1000 ){
-             speed = 0.506
+             speed = 0.52312
              handle_V_FiveHundred(0.05 , 0)
              handle_V_Thousand(0.05, 1)
          } 
