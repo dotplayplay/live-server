@@ -41,7 +41,7 @@ const io = new Server(httpServer, {
 // ==================== fetch single active users bets ==================================
 const fetchUsersBets = (async()=>{
     const data = await CrashGame.find()
-    //  io.emit("my-bet", data)
+     io.emit("my-bet", data)
 })
 
 const fetch_activePlayers = (async(game_id)=>{
@@ -56,8 +56,8 @@ const fetch_activePlayers = (async(game_id)=>{
 })
 
 const fetchPreviousCrashHistory = (async()=>{
-    // const data = await CrashHistory.find()
-    // io.emit("crash-game-history", data)
+    const data = await CrashHistory.find()
+    io.emit("crash-game-history", data)
 })
 
 
