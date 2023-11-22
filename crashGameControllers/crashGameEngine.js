@@ -33,8 +33,8 @@ const fetchHashseed = (async()=>{
 
 const io = new Server(httpServer, {
     cors: {
-        origin:"https://dotplayplay.netlify.app"
-        // origin: "http://localhost:5173"
+        // origin:"https://dotplayplay.netlify.app"
+        origin: "http://localhost:5173"
     },
 });
 
@@ -128,7 +128,6 @@ const GetRedtrendWallet = (async(event, game_id)=>{
         await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
       }
     
-   
 
         await CrashGame.updateOne({
             user_id:event.user_id,
@@ -323,7 +322,7 @@ let count = 0
         }else{
             count = 588.6
         }
-    io.emit("nuppp-curve", count.toFixed(2))
+    // io.emit("nuppp-curve", count.toFixed(2))
     }, 5)
 }) 
 
@@ -992,7 +991,7 @@ const weeklyCashback = async () => {
     if (days === 0  && hours === 0 && minutes === 0 && seconds < 3) {
         handleWeeklyCashbackImplementation();
     }else{
-        io.emit("weekly-count-down", `${ days !== 0 ? days + "d" : ""} ${hours}h ${minutes}m ${seconds}s`)
+        // io.emit("weekly-count-down", `${ days !== 0 ? days + "d" : ""} ${hours}h ${minutes}m ${seconds}s`)
     }
 }
 }
