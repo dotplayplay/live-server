@@ -33,8 +33,8 @@ async function createsocket(httpServer){
 
 const io = new Server(httpServer, {
     cors: {
-        origin:"https://dotplayplay.netlify.app"
-        // origin: "http://localhost:5173"
+        // origin:"https://dotplayplay.netlify.app"
+        origin: "http://localhost:5173"
     },
 });
 
@@ -1030,11 +1030,6 @@ const io = new Server(httpServer, {
 //     return row;
 //   }
   
-let ks = 1
-setInterval(()=>{
-    ks += 0.01
-    io.emit("crash-p",  (ks).toFixed(2))
-},100)
 
 }
 
