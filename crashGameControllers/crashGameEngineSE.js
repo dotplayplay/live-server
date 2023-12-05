@@ -1,4 +1,3 @@
-const EventEmitter = require('events');
 const { format } = require('date-fns');
 const crypto = require("crypto")
 const currentTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
