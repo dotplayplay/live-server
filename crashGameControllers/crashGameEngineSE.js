@@ -19,8 +19,8 @@ let is_consumed = 1
 const express = require('express')
 const cors = require('cors')({
   origin: [
-    'http://localhost:5173',
-    "https://wager.services"
+    // 'http://localhost:5173',
+     "https://dotplayplay.netlify.app"
   ],
 });
 const sseApp = express();
