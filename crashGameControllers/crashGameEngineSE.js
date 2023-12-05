@@ -1094,18 +1094,20 @@ class CrashGameEngine {
 
 
   startCountDown() {
-    this.counter = 30000;
+    this.counter = 1;
     this.countDown = setInterval(() => {
-      this.broadcast("countdown-test", this.counter--);
-      if (this.counter < 0) clearInterval(this.countDown);
+      this.broadcast("countdown-test", this.counter++);
+      if (this.counter > 10000000) clearInterval(this.countDown);
     }, 10);
   }
 
 }
+
 const game = new CrashGameEngine();
 sseApp.get('/events', (req, res) => {
   game.registerEvents(req, res);
 });
+
 // game.start();
 game.startCountDown();
 module.exports = sseApp
