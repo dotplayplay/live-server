@@ -343,7 +343,7 @@ class CrashGameEngine {
       let count = 0
       this.crashCurve = setInterval(() => {
         if (count < 590) {
-          count += 0.94
+          count += 0.34
         } else {
           count = 586.6
         }
