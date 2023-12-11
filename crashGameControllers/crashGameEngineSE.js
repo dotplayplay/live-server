@@ -1004,7 +1004,7 @@ class CrashGameEngine {
           // fetch_activePlayers(detail.game_id)
           timeSec -= 0.01;
           this.load_animate -= 0.198;
-          let pis = {timeSec,load_animate :this.load_animate  }
+          let pis = {timeSec,load_animate :this.load_animate, game_id:detail.game_id  }
           this.broadcast("countdown", pis)
           // this.broadcast("load-animation", load_animate)
           // this.broadcast("game_id", detail.game_id)
