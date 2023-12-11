@@ -735,7 +735,7 @@ const handleCrashed = ((crash_point)=>{
 // ====================== initialize the game countdown ============================
 let result = await fetchHashseed()
 if(result){
-    HandleCountDown(5)
+    // HandleCountDown(5)
 }
 
 // // ================================================ Game logic =======================================

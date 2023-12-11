@@ -344,7 +344,7 @@ class CrashGameEngine {
       let count = 0
       this.crashCurve = setInterval(() => {
         if (count < 590) {
-          count += 0.34
+          count += 0.94
         } else {
           count = 586.6
         }
@@ -717,7 +717,7 @@ class CrashGameEngine {
       let speed = 0.01
       let trigger = 1
       let triggerEk = 1
-      // game.HandlecrashCurve(34)
+      game.HandlecrashCurve(34)
       this.multiplier = setInterval(async () => {
         if (multiplierEL >= crash_point.crashpoint) {
           clearInterval(this.multiplier);
@@ -732,7 +732,7 @@ class CrashGameEngine {
           clearInterval(this.crashCurve)
           setTimeout(() => {
             game.startCountDown(5);
-            // game.fetchPreviousCrashHistory(crash_point)
+            game.fetchPreviousCrashHistory(crash_point)
             this.load_animate = 100
           }, 3000);
         }
