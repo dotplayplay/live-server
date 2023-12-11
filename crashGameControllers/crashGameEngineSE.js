@@ -80,10 +80,13 @@ class CrashGameEngine {
   //     }
   //   })
 
-  //   const fetchPreviousCrashHistory = (async () => {
-  //     const data = await CrashHistory.find()
-  //     this.broadcast("crash-game-history", data)
-  //   })
+  async fetchPreviousCrashHistory(event){
+    try{
+      this.broadcast("crash-game-history", event)
+    }catch(error){
+      console.log(error)
+    }
+  }
 
 
   //   const autobetWallet = (async (event) => {
@@ -348,6 +351,7 @@ class CrashGameEngine {
         this.broadcast("nuppp-curve", count.toFixed(2))
       }, 5)
     }
+
   //   let v_default = 0;
   //   let v_two = 0
   //   const handle_V_two = ((speed, action) => {
@@ -662,7 +666,7 @@ class CrashGameEngine {
     handleCrashed(crash_point){
       let data = { game_id: crash_point.game_id, game_hash: crash_point.hash, crash_point: crash_point.crashpoint}
       this.broadcast("crash-details", data)
-      // handleCrashHistory(crash_point)
+      // game.handleCrashHistory(crash_point)
       // handleGameCrash(crash_point)
       // handleRedTrendballEl(crash_point)
       // handleGreenTrendballEl(crash_point)
@@ -728,6 +732,7 @@ class CrashGameEngine {
           clearInterval(this.crashCurve)
           setTimeout(() => {
             game.startCountDown(5);
+            game.fetchPreviousCrashHistory(crash_point)
             this.load_animate = 100
           }, 3000);
         }
