@@ -27,7 +27,6 @@ const sseApp = express();
 sseApp.use(cors);
 
 
-
 class SSE {
   constructor(res) {
     this.res = res;
@@ -666,7 +665,7 @@ class CrashGameEngine {
     handleCrashed(crash_point){
       let data = { game_id: crash_point.game_id, game_hash: crash_point.hash, crash_point: crash_point.crashpoint}
       this.broadcast("crash-details", data)
-      // game.handleCrashHistory(crash_point)
+      handleCrashHistory(crash_point)
       // handleGameCrash(crash_point)
       // handleRedTrendballEl(crash_point)
       // handleGreenTrendballEl(crash_point)
@@ -717,7 +716,7 @@ class CrashGameEngine {
       let speed = 0.01
       let trigger = 1
       let triggerEk = 1
-      game.HandlecrashCurve(34)
+      // game.HandlecrashCurve(34)
       this.multiplier = setInterval(async () => {
         if (multiplierEL >= crash_point.crashpoint) {
           clearInterval(this.multiplier);
@@ -740,7 +739,7 @@ class CrashGameEngine {
           // fetch_activePlayers(crash_point.game_id)
           // handleAuto_cashout(multiplierEL.toFixed(2), crash_point.game_id)
           if (multiplierEL.toFixed(2) > 1.98 && multiplierEL.toFixed(2) < 2.99) {
-            speed = 0.011
+            speed = 0.0352
             // handle_V_two(0.8, 1)
             // handleRedTrendball(crash_point)
             const called = (() => {
@@ -776,7 +775,7 @@ class CrashGameEngine {
           }
 
           else if (multiplierEL.toFixed(2) > 2.99 && multiplierEL.toFixed(2) < 4.99) {
-            speed = 0.021
+            speed = 0.0852
             if (multiplierEL.toFixed(2) > 4.5) {
               // handle_V_two(0.6, 0)
               // handle_H_Two(0.02, 1)
@@ -816,7 +815,7 @@ class CrashGameEngine {
           }
 
           else if (multiplierEL.toFixed(2) > 4.99 && multiplierEL.toFixed(2) < 6.99) {
-            speed = 0.031
+            speed = 0.1052
             // handle_V_three(0.4, 1)
             // handle_V_Five(0.73, 1)
             if (multiplierEL.toFixed(2) > 6.2 && multiplierEL.toFixed(2) < 5.5) {
@@ -840,7 +839,7 @@ class CrashGameEngine {
             }
           }
           else if (multiplierEL.toFixed(2) > 6.99 && multiplierEL.toFixed(2) < 9.99) {
-            speed = 0.0481
+            speed = 0.1552
             if (multiplierEL.toFixed(2) > 9) {
               // handle_V_Nine(0.6, 1)
             }
@@ -851,7 +850,7 @@ class CrashGameEngine {
             // handle_H_Ten(0.3, 1)
           }
           else if (multiplierEL.toFixed(2) > 9.99 && multiplierEL.toFixed(2) < 14.99) {
-            speed = 0.07232
+            speed = 0.2552
             // handle_V_three(0.16, 0)
             // handle_V_Five(0.3, 0)
             // handle_V_Seven(0.7, 0)
@@ -869,13 +868,13 @@ class CrashGameEngine {
             // handle_h_twenty(0.3, 1)
           }
           else if (multiplierEL.toFixed(2) > 14.99 && multiplierEL.toFixed(2) < 19.99) {
-            speed = 0.08723
+            speed = 0.5552
             // handle_V_Ten(0.6, 1)
             // handle_h_thirthy(0.3, 1)
             // handle_h_twenty(0.3, 1)
           }
           else if (multiplierEL.toFixed(2) > 19.99 && multiplierEL.toFixed(2) < 50.99) {
-            speed = 0.1256
+            speed = 0.7552
             if (multiplierEL.toFixed(2) > 30.99) {
               // handle_V_Twenty(0.3, 1)
               // handle_V_Ten(0.2, 0)
@@ -892,7 +891,7 @@ class CrashGameEngine {
 
           }
           else if (multiplierEL.toFixed(2) > 50.99 && multiplierEL.toFixed(2) < 100.99) {
-            speed = 0.131
+            speed = 0.9552
             if (multiplierEL.toFixed(2) > 70.99) {
               // handle_V_Fivety(0.2, 1)
               // handle_h_fourty(0.3, 1)
@@ -907,7 +906,7 @@ class CrashGameEngine {
             }
           }
           else if (multiplierEL.toFixed(2) > 100.99 && multiplierEL.toFixed(2) < 200) {
-            speed = 0.21236
+            speed = 1.5552
             if (multiplierEL.toFixed(2) > 150.99) {
               // handle_V_Hundred(0.16, 1)
             } else {
@@ -920,7 +919,7 @@ class CrashGameEngine {
           }
           if (multiplierEL.toFixed(2) > 200 && multiplierEL.toFixed(2) < 500) {
             // handle_V_Hundred(0.1, 0)
-            speed = 0.31236
+            speed = 2.5552
             if (multiplierEL.toFixed(2) > 250.99) {
               // handle_h_fourty(0.01, 0)
               // handle_V_TwoHundred(0.07, 1)
@@ -930,13 +929,13 @@ class CrashGameEngine {
             }
           }
           if (multiplierEL.toFixed(2) > 500 && multiplierEL.toFixed(2) < 1000) {
-            speed = 0.41206
+            speed = 5.5552
             // handle_h_sixty(0.06, 1)
             // handle_V_TwoHundred(0.17, 0)
             // handle_V_FiveHundred(0.07, 1)
           }
           if (multiplierEL.toFixed(2) > 1000) {
-            speed = 0.51312
+            speed = 10.5552
             // handle_V_FiveHundred(0.05, 0)
             // handle_V_Thousand(0.05, 1)
           }
