@@ -337,17 +337,17 @@ class CrashGameEngine {
   //     // this.broadcast("crash-all-moonball-users", "is-crash")
   //   })
 
-  //   const HandlecrashCurve = ((event) => {
-  //     let count = 0
-  //     this.crashCurve = setInterval(() => {
-  //       if (count < 590) {
-  //         count += 0.34
-  //       } else {
-  //         count = 588.6
-  //       }
-  //       // this.broadcast("nuppp-curve", count.toFixed(2))
-  //     }, 5)
-  //   })
+    HandlecrashCurve(event){
+      let count = 0
+      this.crashCurve = setInterval(() => {
+        if (count < 590) {
+          count += 0.94
+        } else {
+          count = 586.6
+        }
+        this.broadcast("nuppp-curve", count.toFixed(2))
+      }, 5)
+    }
   //   let v_default = 0;
   //   let v_two = 0
   //   const handle_V_two = ((speed, action) => {
@@ -657,50 +657,47 @@ class CrashGameEngine {
   //   })
 
 
+    // //  =================================== All game crash handler ===================================
 
-  //   // //  =================================== All game crash handler ===================================
+    handleCrashed(crash_point){
+      let data = { game_id: crash_point.game_id, game_hash: crash_point.hash, crash_point: crash_point.crashpoint}
+      this.broadcast("crash-details", data)
+      // handleCrashHistory(crash_point)
+      // handleGameCrash(crash_point)
+      // handleRedTrendballEl(crash_point)
+      // handleGreenTrendballEl(crash_point)
+      // handleMoonTrendballEl(crash_point)
+      // auto = []
+      // v_five = 0
+      // v_default = 0
+      // v_two = 0
+      // v_three = 0
+      // v_seven = 0
+      // v_nine = 0
+      // v_twenty = 0
+      // v_ten = 0
+      // v_hundred = 0
+      // v_FiveHundred = 0
+      // v_thousand = 0
+      // v_fivety = 0
+      // v_Twohundred = 0
 
-  //   const handleCrashed = ((crash_point) => {
-  //     let data = { game_id: crash_point.game_id, game_hash: crash_point.hash }
-  //     this.broadcast("running-crash", 0)
-  //     this.broadcast("crash-point", crash_point.crashpoint)
-  //     this.broadcast("crash-details", data)
-  //     handleCrashHistory(crash_point)
-  //     handleGameCrash(crash_point)
-  //     handleRedTrendballEl(crash_point)
-  //     handleGreenTrendballEl(crash_point)
-  //     handleMoonTrendballEl(crash_point)
-  //     auto = []
-  //     v_five = 0
-  //     v_default = 0
-  //     v_two = 0
-  //     v_three = 0
-  //     v_seven = 0
-  //     v_nine = 0
-  //     v_twenty = 0
-  //     v_ten = 0
-  //     v_hundred = 0
-  //     v_FiveHundred = 0
-  //     v_thousand = 0
-  //     v_fivety = 0
-  //     v_Twohundred = 0
-
-  //     h_hundred = 100
-  //     h_eighty = 100
-  //     h_sixty = 100
-  //     h_thirthy = 100
-  //     h_fourty = 100
-  //     h_twenty = 100
-  //     h_eighteen = 100
-  //     h_sixteen = 100
-  //     h_fourteen = 100
-  //     h_ten = 100
-  //     h_twelve = 100
-  //     h_eight = 78
-  //     h_four = 38
-  //     h_six = 58
-  //     h_two = 18
-  //   })
+      // h_hundred = 100
+      // h_eighty = 100
+      // h_sixty = 100
+      // h_thirthy = 100
+      // h_fourty = 100
+      // h_twenty = 100
+      // h_eighteen = 100
+      // h_sixteen = 100
+      // h_fourteen = 100
+      // h_ten = 100
+      // h_twelve = 100
+      // h_eight = 78
+      // h_four = 38
+      // h_six = 58
+      // h_two = 18
+    }
 
   //   // ====================== initialize the game countdown ============================
   //   let result = await fetchHashseed()
@@ -708,7 +705,7 @@ class CrashGameEngine {
   //     HandleCountDown(5)
   //   }
 
-    // // ================================================ Game logic =======================================
+    // ================================================ Game logic =======================================
 
     HandleMultiplier(point){
       let crash_point = point
@@ -716,7 +713,7 @@ class CrashGameEngine {
       let speed = 0.01
       let trigger = 1
       let triggerEk = 1
-      // HandlecrashCurve(34)
+      game.HandlecrashCurve(34)
       this.multiplier = setInterval(async () => {
         if (multiplierEL >= crash_point.crashpoint) {
           clearInterval(this.multiplier);
@@ -726,7 +723,7 @@ class CrashGameEngine {
           } else if (multiplierEL.toFixed(2) < 10) {
             // handleMoonTrendball(crash_point)
           }
-          // handleCrashed(crash_point)
+          game.handleCrashed(crash_point)
           speed = 0.01
           clearInterval(this.crashCurve)
           setTimeout(() => {
