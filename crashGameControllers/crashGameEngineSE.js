@@ -716,7 +716,7 @@ class CrashGameEngine {
       let speed = 0.01
       let trigger = 1
       let triggerEk = 1
-      // game.HandlecrashCurve(34)
+      game.HandlecrashCurve(34)
       this.multiplier = setInterval(async () => {
         if (multiplierEL >= crash_point.crashpoint) {
           clearInterval(this.multiplier);
