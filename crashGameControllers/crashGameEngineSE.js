@@ -2,7 +2,7 @@ const { format } = require('date-fns');
 const crypto = require("crypto")
 const currentTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 const { crashPointFromHash } = require("./hashseed")
-const { handleCrashHistory, handleGameCrash, handleMoonTrendballEl } = require("./crashStore.js")
+const { handleCrashHistory, handleGameCrash,handleRedTrendballEl, handleMoonTrendballEl } = require("./crashStore.js")
 const { handleProfileTransactions } = require("../profile_mangement/index")
 const { handleRechargeimplement } = require("../profile_mangement/cashbacks")
 const { handleMonthlyCashbackImplementation } = require("../profile_mangement/monthlycashback")
@@ -61,23 +61,22 @@ class CrashGameEngine {
   // async start() {
 
 
-    
-  //   // ==================== fetch single active users bets ==================================
-  //   const fetchUsersBets = (async () => {
-  //     const data = await CrashGame.find()
-  //     this.broadcast("my-bet", data)
-  //   })
+    // ==================== fetch single active users bets ==================================
+    async fetchUsersBets(){
+      const data = await CrashGame.find()
+      this.broadcast("my-bet", data)
+    }
 
-  //   const fetch_activePlayers = (async (game_id) => {
-  //     try {
-  //       // const data = await CrashGame.find({game_id})
-  //       // this.broadcast("active_players", data)
-  //       // this.broadcast("crash-game-redtrend", data)
-  //     }
-  //     catch (error) {
-  //       console.log("Could not find games")
-  //     }
-  //   })
+async fetch_activePlayers(game_id){
+    try {
+      const data = await CrashGame.find({game_id, game_status: true})
+      this.broadcast("active_players", data)
+      // this.broadcast("crash-game-redtrend", data)
+    }
+    catch (error) {
+      console.log("Could not find games")
+    }
+}
 
   async fetchPreviousCrashHistory(event){
     try{
@@ -182,17 +181,7 @@ class CrashGameEngine {
   //     }
   //   })
 
-  //   //================== update payout and crash hash ===========================
-  //   const handleRedTrendballEl = (async (game) => {
-  //     await CrashGame.updateMany({
-  //       game_id: game.game_id,
-  //       game_type: "Red"
-  //     }, {
-  //       game_status: false,
-  //       payout: game.crashpoint,
-  //       game_hash: game.hash
-  //     })
-  //   })
+
 
   //   //  ====== red trend ball lost ============
   //   const handleRedTrendball = (async (game) => {
@@ -666,8 +655,9 @@ class CrashGameEngine {
       let data = { game_id: crash_point.game_id, game_hash: crash_point.hash, crash_point: crash_point.crashpoint}
       this.broadcast("crash-details", data)
       handleCrashHistory(crash_point)
-      // handleGameCrash(crash_point)
-      // handleRedTrendballEl(crash_point)
+      handleGameCrash(crash_point)
+      handleRedTrendballEl(crash_point)
+      game.fetchUsersBets()
       // handleGreenTrendballEl(crash_point)
       // handleMoonTrendballEl(crash_point)
       // auto = []
@@ -736,7 +726,7 @@ class CrashGameEngine {
           }, 3000);
         }
         else {
-          // fetch_activePlayers(crash_point.game_id)
+          game.fetch_activePlayers(crash_point.game_id)
           // handleAuto_cashout(multiplierEL.toFixed(2), crash_point.game_id)
           if (multiplierEL.toFixed(2) > 1.98 && multiplierEL.toFixed(2) < 2.99) {
             speed = 0.0352
@@ -1001,7 +991,7 @@ class CrashGameEngine {
           game.HandleMultiplier(detail)
           // this.broadcast("countdown", 0)
         } else {
-          // fetch_activePlayers(detail.game_id)
+          game.fetch_activePlayers(detail.game_id)
           timeSec -= 0.01;
           this.load_animate -= 0.198;
           let pis = {timeSec,load_animate :this.load_animate, game_id:detail.game_id  }
