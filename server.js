@@ -1,10 +1,10 @@
 const express = require("express");
 const cors = require("cors");
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const { createsocket } = require("./crashGameControllers/crashGameEngine.js");
 const seApp = require("./crashGameControllers/crashGameEngineSE");
 require("dotenv").config();
-require("./crashGameControllers/genarateHash")
+require("./crashGameControllers/genarateHash");
 // require("./crashGameControllers/generate-seed")
 
 // ========================= socket =============
