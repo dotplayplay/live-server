@@ -11,13 +11,13 @@ const { handleWeeklyCashbackImplementation } = require("../profile_mangement/wee
 const CrashHash = require("../model/crash_hash")
 const CrashGame = require("../model/crashgame")
 const CrashHistory = require("../model/crash-game-history")
-const ETHwallet = require("../model/ETH-wallet.js")
-const BTCWallet = require("../model/btc-wallet.js");
-const WGFWallet = require("../model/WGF-wallet.js");
+const CashBackDB = require("../model/cash_back")
+const Wallet = require("../model/wallet")
+const USDT_wallet = require("../model/Usdt-wallet")
+const PPFWallet = require("../model/PPF-wallet");
 let is_consumed = 1
 async function createsocket(httpServer){
 let hashList = []
-
 const fetchHashseed = (async()=>{
     try{
         const crashes = await CrashHash.find()
@@ -31,8 +31,6 @@ const fetchHashseed = (async()=>{
     }
 })
 
-fetchHashseed()
-
 const io = new Server(httpServer, {
     cors: {
         origin:"https://wager.services"
@@ -40,17 +38,17 @@ const io = new Server(httpServer, {
     },
 });
 
-
 // ==================== fetch single active users bets ==================================
 const fetchUsersBets = (async()=>{
     const data = await CrashGame.find()
      io.emit("my-bet", data)
 })
+
 const fetch_activePlayers = (async(game_id)=>{
     try{
-        const data = await CrashGame.find({game_id})
-        io.emit("active_players", data)
-        io.emit("crash-game-redtrend", data)
+        // const data = await CrashGame.find({game_id})
+        // io.emit("active_players", data)
+        // io.emit("crash-game-redtrend", data)
     }
     catch(error){
         console.log("Could not find games")
@@ -65,28 +63,23 @@ const fetchPreviousCrashHistory = (async()=>{
 
 const autobetWallet = (async(event)=>{
     let current_amount; 
-    if(event.token === "WGF"){
-      let skjk = await WGFWallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 1.98
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-     await WGFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
-  
-    if(event.token === "BTC"){
-      let skjk = await BTCWallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 1.98
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-      await BTCWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
-  
-    if(event.token === "ETH"){
-      let skjk = await ETHwallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 1.98
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-      await ETHwallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
+    if(event.token === "PPF"){
+        let skjk = await PPFWallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 1.98
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+       await PPFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+      if(event.token === "USDT"){
+        let skjk = await USDT_wallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 1.98
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+    //  io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
 
-     io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
+
      await CrashGame.updateOne({
         user_id:event.user_id,
         game_id:event.game_id,
@@ -99,7 +92,7 @@ const autobetWallet = (async(event)=>{
         has_won: true
      })
 
-     io.emit("crash-autobet-users", "is-crash")
+    //  io.emit("crash-autobet-users", "is-crash")
 })
 
 let auto = []
@@ -123,26 +116,22 @@ const handleAuto_cashout = (async(event, point)=>{
 // Get player's wallet
 const GetRedtrendWallet = (async(event, game_id)=>{
     let current_amount; 
-    if(event.token === "WGF"){
-      let skjk = await WGFWallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 1.98
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-     await WGFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
-  
-    if(event.token === "BTC"){
-      let skjk = await BTCWallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 1.98
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-      await BTCWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
-  
-    if(event.token === "ETH"){
-      let skjk = await ETHwallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 1.98
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-      await ETHwallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
+    if(event.token === "PPF"){
+        let skjk = await PPFWallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 1.98
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+       await PPFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+      if(event.token === "USDT"){
+        let skjk = await USDT_wallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 1.98
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+
+
         await CrashGame.updateOne({
             user_id:event.user_id,
             game_id:game_id,
@@ -155,8 +144,9 @@ const GetRedtrendWallet = (async(event, game_id)=>{
             payout:1.98,
             has_won: true
          })
-    io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
-    io.emit("crash-all-redball-users", "is-crash")
+    // io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
+    // io.emit("crash-all-redball-users", "is-crash")
+
 })
 
 
@@ -165,7 +155,7 @@ const handleRedtrendballCashout = (async(game_id)=>{
     let data = await CrashGame.find({game_id:game_id,game_type:"Red"})
     for(let i = 0; i < data.length; i++){
         GetRedtrendWallet(data[i], game_id)
-        io.emit("crash-all-redball-users", "has_win")
+        // io.emit("crash-all-redball-users", "has_win")
     }
 })
 
@@ -193,37 +183,30 @@ const handleRedTrendball = (async(game)=>{
             profit:0,
             has_won:false,
          })
-        io.emit("crash-all-redball-users", "is-crash")
+        // io.emit("crash-all-redball-users", "is-crash")
     }
 })
 
 // ==================================================== Green Trendball section =============================================================== 
 // Get player's wallet
 const GetGreentrendWallet = (async(event, game_id)=>{
+      let current_amount; 
+    if(event.token === "PPF"){
+        let skjk = await PPFWallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 2
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+       await PPFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+      if(event.token === "USDT"){
+        let skjk = await USDT_wallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 2
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+    //  io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
 
-    let current_amount; 
-    if(event.token === "WGF"){
-      let skjk = await WGFWallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 2
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-     await WGFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
-  
-    if(event.token === "BTC"){
-      let skjk = await BTCWallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 2
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-      await BTCWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
-  
-    if(event.token === "ETH"){
-      let skjk = await ETHwallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 2
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-      await ETHwallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
-
-    io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
 
     await CrashGame.updateOne({
         user_id:event.user_id,
@@ -237,7 +220,7 @@ const GetGreentrendWallet = (async(event, game_id)=>{
         payout:2,
         has_won: true
      })
-    io.emit("crash-all-redball-users", "is-crash")
+    // io.emit("crash-all-redball-users", "is-crash")
 })
 
 //================== update payout and crash hash ===========================
@@ -271,7 +254,7 @@ const handleGreentrendballCashout = (async(game_id)=>{
    let data = await CrashGame.find({game_id:game_id,game_type:"Green" })
     for(let i = 0; i < data.length; i++){
         GetGreentrendWallet(data[i], game_id)
-        io.emit("crash-all-greenball-users", "has_win")
+        // io.emit("crash-all-greenball-users", "has_win")
     }
 })
 
@@ -279,31 +262,22 @@ const handleGreentrendballCashout = (async(game_id)=>{
 
 // Get player's wallet
 const GetMoontrendWallet = (async(event, game_id)=>{
- 
     let current_amount; 
-    if(event.token === "WGF"){
-      let skjk = await WGFWallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 10
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-     await WGFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
-  
-    if(event.token === "BTC"){
-      let skjk = await BTCWallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 10
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-      await BTCWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
-  
-    if(event.token === "ETH"){
-      let skjk = await ETHwallet.find({user_id:event.user_id})
-      let win_amount = parseFloat(event.bet_amount) * 10
-      current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
-      await ETHwallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
-    }
-
-        io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
-
+    if(event.token === "PPF"){
+        let skjk = await PPFWallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 10
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+       await PPFWallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+      if(event.token === "USDT"){
+        let skjk = await USDT_wallet.find({user_id:event.user_id})
+        let win_amount = parseFloat(event.bet_amount) * 10
+        current_amount = parseFloat(parseFloat(skjk[0].balance) + win_amount).toFixed(4)
+        await USDT_wallet.updateOne({ user_id:event.user_id }, {balance: current_amount });
+      }
+    
+    //  io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
         await CrashGame.updateOne({
             user_id:event.user_id,
             game_id:game_id,
@@ -312,11 +286,11 @@ const GetMoontrendWallet = (async(event, game_id)=>{
             game_status: false,
             user_status: false,
             cashout:2,
-            profit: parseFloat(event.bet_amount) * 2,
+            profit: parseFloat(event.bet_amount) * 10,
             payout:2,
             has_won: true
          })
-    io.emit("crash-all-moonball-users", "is-crash")
+    // io.emit("crash-all-moonball-users", "is-crash")
 })
 
 // Notify winning update
@@ -324,7 +298,7 @@ const handleMoontrendballCashout = (async(game_id)=>{
     let data = await CrashGame.find({game_id:game_id,game_type:"Moon" })
        for(let i = 0; i < data.length; i++){
         GetMoontrendWallet(data[i], game_id)
-        io.emit("crash-all-moonball-users", "has_win")
+        // io.emit("crash-all-moonball-users", "has_win")
        }
 })
 
@@ -339,7 +313,7 @@ const handleMoonTrendball = (async(game)=>{
         profit:0,
         has_won:false
      })
-    io.emit("crash-all-moonball-users", "is-crash")
+    // io.emit("crash-all-moonball-users", "is-crash")
 })
 
 let cur
@@ -347,33 +321,33 @@ const HandlecrashCurve = ((event)=>{
 let count = 0
     cur = setInterval(()=>{
         if(count < 590){
-            count += 0.7
+            count += 0.34
         }else{
             count = 588.6
         }
-    io.emit("nuppp-curve", count.toFixed(2))
-    }, 3)
+    // io.emit("nuppp-curve", count.toFixed(2))
+    }, 5)
 }) 
 
 let v_two = 0
 const handle_V_two = ((speed, action)=>{
     v_two += speed
-    if(action){
-        io.emit("v_two", v_two)
-    }else{
-        io.emit("v_two", action)
-        v_two = 0
-    }
-    io.emit("v_default", false)
+    // if(action){
+    //     io.emit("v_two", v_two)
+    // }else{
+    //     io.emit("v_two", action)
+    //     v_two = 0
+    // }
+    // io.emit("v_default", false)
 })
 
 let v_three = 0
 const handle_V_three = ((speed, action)=>{
     v_three += speed
     if(action){
-        io.emit("v_three", v_three)
+        // io.emit("v_three", v_three)
     }else{
-        io.emit("v_three", action)
+        // io.emit("v_three", action)
         v_three = 0
     }
 })
@@ -383,10 +357,10 @@ let v_five = 0
 const handle_V_Five = ((speed, action)=>{
     v_five += speed
     if(action){
-        io.emit("v_five", v_five)
+        // io.emit("v_five", v_five)
     }else{
         v_five = 0
-        io.emit("v_five", action)
+        // io.emit("v_five", action)
     }
 })
 
@@ -394,103 +368,103 @@ const handle_V_Five = ((speed, action)=>{
 let v_seven = 0
 const handle_V_Seven = ((speed, action)=>{
     v_seven += speed
-    if(action){
-        io.emit("v_seven", v_seven)
-    }else{
-        v_seven = 0
-        io.emit("v_seven", action)
-    }
+    // if(action){
+    //     io.emit("v_seven", v_seven)
+    // }else{
+    //     v_seven = 0
+    //     io.emit("v_seven", action)
+    // }
 })
 
 let v_nine = 0
 const handle_V_Nine = ((speed, action)=>{
     v_nine += speed
-    if(action){
-        io.emit("v_nine", v_nine)
-    }else{
-        v_nine = 0
-        io.emit("v_nine", action)
-    }
+    // if(action){
+    //     io.emit("v_nine", v_nine)
+    // }else{
+    //     v_nine = 0
+    //     io.emit("v_nine", action)
+    // }
 })
 
 
 let v_ten = 0
 const handle_V_Ten = ((speed, action)=>{
     v_ten += speed
-    if(action){
-        io.emit("v_ten", v_ten)
-    }else{
-        v_ten = 0
-        io.emit("v_ten", action)
-    }
+    // if(action){
+    //     io.emit("v_ten", v_ten)
+    // }else{
+    //     v_ten = 0
+    //     io.emit("v_ten", action)
+    // }
 })
 
 let v_twenty = 0
 const handle_V_Twenty = ((speed, action)=>{
     v_twenty += speed
-    if(action){
-        io.emit("v_twenty", v_twenty)
-    }else{
-        v_twenty = 0
-        io.emit("v_twenty", action)
-    }
+    // if(action){
+    //     io.emit("v_twenty", v_twenty)
+    // }else{
+    //     v_twenty = 0
+    //     io.emit("v_twenty", action)
+    // }
 })
 
 let v_fivety = 0
 const handle_V_Fivety = ((speed, action)=>{
     v_fivety += speed
-    if(action){
-        io.emit("v_fivety", v_fivety)
-    }else{
-        v_fivety = 0
-        io.emit("v_fivety", action)
-    }
+    // if(action){
+    //     io.emit("v_fivety", v_fivety)
+    // }else{
+    //     v_fivety = 0
+    //     io.emit("v_fivety", action)
+    // }
 })
 
 let v_hundred = 0
 const handle_V_Hundred = ((speed, action)=>{
     v_hundred += speed
-    if(action){
-        io.emit("v_hundred", v_hundred)
-    }else{
-        v_hundred = 0
-        io.emit("v_hundred", action)
-    }
+    // if(action){
+    //     io.emit("v_hundred", v_hundred)
+    // }else{
+    //     v_hundred = 0
+    //     io.emit("v_hundred", action)
+    // }
 })
 
 
 let v_Twohundred = 0
 const handle_V_TwoHundred = ((speed, action)=>{
     v_Twohundred += speed
-    if(action){
-        io.emit("v_Twohundred", v_Twohundred)
-    }else{
-        v_Twohundred = 0
-        io.emit("v_Twohundred", action)
-    }
+    // if(action){
+    //     io.emit("v_Twohundred", v_Twohundred)
+    // }else{
+    //     v_Twohundred = 0
+    //     io.emit("v_Twohundred", action)
+    // }
 })
 
 
 let v_FiveHundred = 0
 const handle_V_FiveHundred = ((speed, action)=>{
     v_FiveHundred += speed
-    if(action){
-        io.emit("v_FiveHundred", v_FiveHundred)
-    }else{
-        v_FiveHundred = 0
-        io.emit("v_FiveHundred", action)
-    }
+    // if(action){
+    //     io.emit("v_FiveHundred", v_FiveHundred)
+    // }else{
+    //     v_FiveHundred = 0
+    //     io.emit("v_FiveHundred", action)
+    // }
 })
 
 let v_thousand = 0
 const handle_V_Thousand = ((speed, action)=>{
     v_thousand += speed
-    if(action){
-        io.emit("v_thousand", v_thousand)
-    }else{
-        v_thousand = 0
-        io.emit("v_thousand", action)
-    }
+    // if(action){
+    //     io.emit("v_thousand", v_thousand)
+    // }else{
+    //     v_thousand = 0
+    //     io.emit("v_thousand", action)
+    // }
 })
 
 
@@ -498,134 +472,134 @@ const handle_V_Thousand = ((speed, action)=>{
 let h_two = 18
 const handle_H_Two = ((speed, action)=>{
     h_two -= speed
-    if(action){
-        io.emit("h_two", h_two)
-    }else{
-        h_two = 18
-        io.emit("h_two", action)
-    }
+    // if(action){
+    //     io.emit("h_two", h_two)
+    // }else{
+    //     h_two = 18
+    //     io.emit("h_two", action)
+    // }
 })
 
 let h_four = 38
 const handle_H_Four = ((speed, action)=>{
     h_four -= speed
-    if(action){
-        io.emit("h_four", h_four)
-    }else{
-        h_four = 38
-        io.emit("h_four", action)
-    }
+    // if(action){
+    //     io.emit("h_four", h_four)
+    // }else{
+    //     h_four = 38
+    //     io.emit("h_four", action)
+    // }
 })
 
 
 let h_six = 58
 const handle_H_Six = ((speed, action)=>{
     h_six -= speed
-    if(action){
-        io.emit("h_six", h_six)
-    }else{
-        h_six = 58
-        io.emit("h_six", action)
-    }
+    // if(action){
+    //     io.emit("h_six", h_six)
+    // }else{
+    //     h_six = 58
+    //     io.emit("h_six", action)
+    // }
 })
 
 let h_eight = 78
 const handle_H_Eight = ((speed, action)=>{
     h_eight -= speed
-    if(action){
-        io.emit("h_eight", h_eight)
-    }else{
-        h_eight = 78
-        io.emit("h_eight", action)
-    }
+    // if(action){
+    //     io.emit("h_eight", h_eight)
+    // }else{
+    //     h_eight = 78
+    //     io.emit("h_eight", action)
+    // }
 })
 
 let h_ten = 100
 const handle_H_Ten = ((speed, action)=>{
-    h_ten -= speed
-    if(action){
-        io.emit("h_ten", h_ten)
-    }else{
-        h_ten = 100
-        io.emit("h_ten", action)
-    }
+    // h_ten -= speed
+    // if(action){
+    //     io.emit("h_ten", h_ten)
+    // }else{
+    //     h_ten = 100
+    //     io.emit("h_ten", action)
+    // }
 })
 
 let h_twelve = 100
 const handle_H_Twelve = ((speed, action)=>{
-    h_twelve -= speed
-    if(action){
-        io.emit("h_twelve", h_twelve)
-    }else{
-        h_twelve = 100
-        io.emit("h_twelve", action)
-    }
+    // h_twelve -= speed
+    // if(action){
+    //     io.emit("h_twelve", h_twelve)
+    // }else{
+    //     h_twelve = 100
+    //     io.emit("h_twelve", action)
+    // }
 })
 
 let h_fourteen = 100
 const handle_h_fourteen = ((speed, action)=>{
     h_fourteen -= speed
-    if(action){
-        io.emit("h_fourteen", h_fourteen)
-    }else{
-        h_fourteen = 100
-        io.emit("h_fourteen", action)
-    }
+    // if(action){
+    //     io.emit("h_fourteen", h_fourteen)
+    // }else{
+    //     h_fourteen = 100
+    //     io.emit("h_fourteen", action)
+    // }
 })
 
 let h_sixteen = 100
 const handle_h_sixteen = ((speed, action)=>{
     h_sixteen -= speed
-    if(action){
-        io.emit("h_sixteen", h_sixteen)
-    }else{
-        h_sixteen = 100
-        io.emit("h_sixteen", action)
-    }
+    // if(action){
+    //     io.emit("h_sixteen", h_sixteen)
+    // }else{
+    //     h_sixteen = 100
+    //     io.emit("h_sixteen", action)
+    // }
 })
 
 let h_eighteen = 100
 const handle_h_eighteen = ((speed, action)=>{
     h_eighteen -= speed
-    if(action){
-        io.emit("h_eighteen", h_eighteen)
-    }else{
-        h_eighteen = 100
-        io.emit("h_eighteen", action)
-    }
+    // if(action){
+    //     io.emit("h_eighteen", h_eighteen)
+    // }else{
+    //     h_eighteen = 100
+    //     io.emit("h_eighteen", action)
+    // }
 })
 
 let h_twenty = 100
 const handle_h_twenty = ((speed, action)=>{
     h_twenty -= speed
-    if(action){
-        io.emit("h_twenty", h_twenty)
-    }else{
-        h_twenty = 100
-        io.emit("h_twenty", action)
-    }
+    // if(action){
+    //     io.emit("h_twenty", h_twenty)
+    // }else{
+    //     h_twenty = 100
+    //     io.emit("h_twenty", action)
+    // }
 })
 
 let h_thirthy = 100
 const handle_h_thirthy = ((speed, action)=>{
     h_thirthy -= speed
-    if(action){
-        io.emit("h_thirthy", h_thirthy)
-    }else{
-        h_thirthy = 100
-        io.emit("h_thirthy", action)
-    }
+    // if(action){
+    //     io.emit("h_thirthy", h_thirthy)
+    // }else{
+    //     h_thirthy = 100
+    //     io.emit("h_thirthy", action)
+    // }
 })
 
 let h_fourty = 100
 const handle_h_fourty = ((speed, action)=>{
     h_fourty -= speed
-    if(action){
-        io.emit("h_fourty", h_fourty)
-    }else{
-        h_fourty = 100
-        io.emit("h_fourty", action)
-    }
+    // if(action){
+    //     io.emit("h_fourty", h_fourty)
+    // }else{
+    //     h_fourty = 100
+    //     io.emit("h_fourty", action)
+    // }
 })
 
 
@@ -633,33 +607,33 @@ const handle_h_fourty = ((speed, action)=>{
 let h_sixty = 100
 const handle_h_sixty = ((speed, action)=>{
     h_sixty -= speed
-    if(action){
-        io.emit("h_sixty", h_sixty)
-    }else{
-        h_sixty = 100
-        io.emit("h_sixty", action)
-    }
+    // if(action){
+    //     io.emit("h_sixty", h_sixty)
+    // }else{
+    //     h_sixty = 100
+    //     io.emit("h_sixty", action)
+    // }
 })
 
 let h_eighty = 100
 const handle_h_eighty = ((speed, action)=>{
     h_eighty -= speed
-    if(action){
-        io.emit("h_eighty", h_eighty)
-    }else{
-        io.emit("h_eighty", action)
-    }
+    // if(action){
+    //     io.emit("h_eighty", h_eighty)
+    // }else{
+    //     io.emit("h_eighty", action)
+    // }
 })
 
 
 let h_hundred = 100
 const handle_h_hundred = ((speed, action)=>{
-    h_hundred -= speed
-    if(action){
-        io.emit("h_hundred", h_hundred)
-    }else{
-        io.emit("h_hundred", action)
-    }
+    // h_hundred -= speed
+    // if(action){
+    //     io.emit("h_hundred", h_hundred)
+    // }else{
+    //     io.emit("h_hundred", action)
+    // }
 })
 
 // ========================================= Initial loading run ------===========================================================
@@ -668,6 +642,7 @@ const HandleCountDown = ( async (e)=>{
    let ty = hashList[hashList.length - is_consumed]
     let detail = crashPointFromHash(ty)
     is_consumed += 1
+    io.emit("crash-point", 0)
     fetchPreviousCrashHistory()
     fetchUsersBets(detail)
     let timeSec = e
@@ -675,52 +650,52 @@ const HandleCountDown = ( async (e)=>{
     if (timeSec.toFixed(2) <= 0.1) {
         clearInterval(timeLoop);
         handleMultiplier(detail)
+        io.emit("countdown", 0)
     }else{
         fetch_activePlayers(detail.game_id)
         timeSec -= 0.01;
-        load_animate -= 0.2
-        io.emit("v_five", 0)
-        io.emit("v_default", true)
-        io.emit("v_two", 0)
-        io.emit("v_seven", 0)
-        io.emit("v_three", 0)
-        io.emit("v_nine", 0)
-        io.emit("v_twenty", 0)
-        io.emit("crash-state", "load-crash")
+        load_animate -= 0.198
+        // io.emit("v_five", 0)
+        // io.emit("v_default", true)
+        // io.emit("v_two", 0)
+        // io.emit("v_seven", 0)
+        // io.emit("v_three", 0)
+        // io.emit("v_nine", 0)
+        // io.emit("v_twenty", 0)
         io.emit("countdown", timeSec)
         io.emit("load-animation", load_animate)
         io.emit("game_id", detail.game_id)
-        io.emit("v_ten", 0)
-        io.emit("v_hundred", 0)
-        io.emit("v_FiveHundred", 0)
-        io.emit("v_thousand", 0)
-        io.emit("v_fivety", 0)
-        io.emit("v_Twohundred", 0)
+        // io.emit("v_ten", 0)
+        // io.emit("v_hundred", 0)
+        // io.emit("v_FiveHundred", 0)
+        // io.emit("v_thousand", 0)
+        // io.emit("v_fivety", 0)
+        // io.emit("v_Twohundred", 0)
         
-        io.emit("h_hundred", 0)
-        io.emit("h_eighty", 0)
-        io.emit("h_sixty", 0)
-        io.emit("h_thirthy", 0)
-        io.emit("h_fourty", 0)
-        io.emit("h_twenty", 0)
-        io.emit("h_eighteen", 0)
-        io.emit("h_sixteen", 0)
-        io.emit("h_fourteen", 0)
-        io.emit("h_ten", 0)
-        io.emit("h_twelve", 0)
-        io.emit("h_eight", 78)
-        io.emit("h_six", 58)
-        io.emit("h_two", 18)
-        io.emit("h_four", 38)
+        // io.emit("h_hundred", 0)
+        // io.emit("h_eighty", 0)
+        // io.emit("h_sixty", 0)
+        // io.emit("h_thirthy", 0)
+        // io.emit("h_fourty", 0)
+        // io.emit("h_twenty", 0)
+        // io.emit("h_eighteen", 0)
+        // io.emit("h_sixteen", 0)
+        // io.emit("h_fourteen", 0)
+        // io.emit("h_ten", 0)
+        // io.emit("h_twelve", 0)
+        // io.emit("h_eight", 78)
+        // io.emit("h_six", 58)
+        // io.emit("h_two", 18)
+        // io.emit("h_four", 38)
     }
     }, 10);
 })
 
-//  =================================== All game crash handler ===================================
+// //  =================================== All game crash handler ===================================
 
 const handleCrashed = ((crash_point)=>{
     let data = { game_id: crash_point.game_id, game_hash: crash_point.hash }
-    io.emit("crash-state", "hasCrashed")
+    io.emit("running-crash", 0)
     io.emit("crash-point", crash_point.crashpoint)
     io.emit("crash-details", data)
     handleCrashHistory(crash_point)
@@ -763,10 +738,10 @@ const handleCrashed = ((crash_point)=>{
 // ====================== initialize the game countdown ============================
 let result = await fetchHashseed()
 if(result){
-    HandleCountDown(5)
+    // HandleCountDown(5)
 }
 
-// ================================================ Game logic =======================================
+// // ================================================ Game logic =======================================
 
 const handleMultiplier = ((point)=>{
     let crash_point = point
@@ -796,7 +771,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         fetch_activePlayers(crash_point.game_id)
         handleAuto_cashout( multiplierEL.toFixed(2), crash_point.game_id)
         if( multiplierEL.toFixed(2) > 1.98 &&  multiplierEL.toFixed(2) < 2.99  ){
-            speed = 0.02
+            speed = 0.011
             handle_V_two(0.8, 1)
             handleRedTrendball(crash_point)
             const called = (()=>{
@@ -804,7 +779,7 @@ if (multiplierEL >= crash_point.crashpoint) {
                     handleGreentrendballCashout(crash_point.game_id)
                     trigger = 0
                 }
-            })
+        })
             called()
             if(multiplierEL.toFixed(2) > 2.36 && multiplierEL.toFixed(2) < 2.76){
                 handle_H_Twelve(1.2, 1)
@@ -832,7 +807,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         }
 
         else if ( multiplierEL.toFixed(2) > 2.99 &&  multiplierEL.toFixed(2) < 4.99 ){
-            speed = 0.0276
+            speed = 0.021
             if(multiplierEL.toFixed(2) > 4.5){
                 handle_V_two(0.6, 0)
                 handle_H_Two(0.02, 1)
@@ -872,7 +847,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         }
 
         else if ( multiplierEL.toFixed(2) > 4.99 &&  multiplierEL.toFixed(2) < 6.99 ){
-            speed = 0.0356
+            speed = 0.031
             handle_V_three(0.4, 1)
             handle_V_Five(0.73, 1)
             if(multiplierEL.toFixed(2) > 6.2 && multiplierEL.toFixed(2) < 5.5 ){
@@ -896,7 +871,7 @@ if (multiplierEL >= crash_point.crashpoint) {
             }
         }
         else if ( multiplierEL.toFixed(2) > 6.99 &&  multiplierEL.toFixed(2) < 9.99 ){
-            speed = 0.0596
+            speed = 0.0481
             if(multiplierEL.toFixed(2) > 9){
                 handle_V_Nine(0.6, 1)
             }
@@ -907,7 +882,7 @@ if (multiplierEL >= crash_point.crashpoint) {
             handle_H_Ten(0.3, 1)
         }
         else if ( multiplierEL.toFixed(2) > 9.99 &&  multiplierEL.toFixed(2) < 14.99 ){
-            speed = 0.0806
+            speed = 0.07232
             handle_V_three(0.16, 0)
             handle_V_Five(0.3, 0)
             handle_V_Seven(0.7, 0)
@@ -925,7 +900,7 @@ if (multiplierEL >= crash_point.crashpoint) {
             handle_h_twenty(0.3, 1)
         }
         else if ( multiplierEL.toFixed(2) > 14.99 &&  multiplierEL.toFixed(2) < 19.99 ){
-            speed = 0.0967
+            speed = 0.08723
             handle_V_Ten(0.6, 1)
             handle_h_thirthy(0.3, 1)
             handle_h_twenty(0.3, 1)
@@ -948,7 +923,7 @@ if (multiplierEL >= crash_point.crashpoint) {
        
         }
         else if ( multiplierEL.toFixed(2) > 50.99 &&  multiplierEL.toFixed(2) < 100.99 ){
-            speed = 0.1556
+            speed = 0.131
             if( multiplierEL.toFixed(2) > 70.99 ){
                 handle_V_Fivety(0.2, 1)
                 handle_h_fourty(0.3, 1)
@@ -963,7 +938,7 @@ if (multiplierEL >= crash_point.crashpoint) {
             }
         }
         else if ( multiplierEL.toFixed(2) > 100.99 && multiplierEL.toFixed(2) < 200){
-            speed = 0.256
+            speed = 0.21236
             if( multiplierEL.toFixed(2) > 150.99 ){
                 handle_V_Hundred(0.16, 1)
             }else{
@@ -976,7 +951,7 @@ if (multiplierEL >= crash_point.crashpoint) {
         }
         if(multiplierEL.toFixed(2) > 200 && multiplierEL.toFixed(2) < 500){
             handle_V_Hundred(0.1, 0)
-            speed = 0.306
+            speed = 0.31236
             if( multiplierEL.toFixed(2) > 250.99 ){
                 handle_h_fourty(0.01, 0)
                 handle_V_TwoHundred(0.07, 1)
@@ -986,24 +961,78 @@ if (multiplierEL >= crash_point.crashpoint) {
             }
         }
         if(multiplierEL.toFixed(2) > 500 && multiplierEL.toFixed(2) < 1000){
-            speed = 0.406
-
+            speed = 0.41206
             handle_h_sixty(0.06, 1)
             handle_V_TwoHundred(0.17, 0)
             handle_V_FiveHundred(0.07 , 1)
         }
          if(multiplierEL.toFixed(2) > 1000 ){
-             speed = 0.506
+             speed = 0.51312
              handle_V_FiveHundred(0.05 , 0)
              handle_V_Thousand(0.05, 1)
          } 
-            io.emit("crash-state", "crash-isRunning")
             io.emit("running-crash", multiplierEL.toFixed(2))
      }
      multiplierEL  += speed;
-    }, 100);
+    }, 90);
 })
 
+
+//================ weeklyCASHBACK ================
+// const weeklyCashback = async () => {
+//     let fulldata = await CashBackDB.find().select("nextMonday")
+//     if(fulldata.length  > 0){
+//     let next_monday = fulldata[0].nextMonday
+//     let countDownDate = new Date(next_monday).getTime();
+//     let now = new Date().getTime();
+//     let distance = countDownDate - now;
+//     // Time calculations for days, hours, minutes and seconds
+//     let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+//     let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+//     let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+//     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+//     if (days === 0  && hours === 0 && minutes === 0 && seconds < 3) {
+//         handleWeeklyCashbackImplementation();
+//     }else{
+//         // io.emit("weekly-count-down", `${ days !== 0 ? days + "d" : ""} ${hours}h ${minutes}m ${seconds}s`)
+//     }
+// }
+// }
+
+// // setInterval(() => weeklyCashback(), 1000);
+
+// //================ weeklyCASHBACK ================
+// const monthlyCashback = async () => {
+//     let fulldata = await CashBackDB.find().select("nextMonth")
+//     if(fulldata.length  > 0){
+//         let next_month = fulldata[0].nextMonth
+//         let countDownDate = new Date(next_month).getTime();
+//         let now = new Date().getTime();
+//         let distance = countDownDate - now;
+//         // Time calculations for days, hours, minutes and seconds
+//         let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+//         let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+//         let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+//         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+//         if (new Date().getDate() === 1) {
+//             handleMonthlyCashbackImplementation()
+//         }else{
+//             // io.emit("monthly-count-down", `${ days !== 0 ? days + "d" : ""} ${hours}h ${minutes}m ${seconds}s`)
+//         }
+//     }
+// }
+// // setInterval(() => monthlyCashback(), 1000);
+
+// function generateRandomNumber(serverSeed, clientSeed, hash, nonce) {
+//     const combinedSeed = `${serverSeed}-${clientSeed}-${hash}-${nonce}`;
+//     const hmac = crypto.createHmac('sha256', combinedSeed);
+//     const hmacHex = hmac.digest('hex');
+//     const decimalValue = (parseInt(hmacHex , 32) % 10001 / 100)
+//     const randomValue = (decimalValue % maxRange).toFixed(2);
+//     let row = { point : randomValue, server_seed:serverSeed, client_seed:clientSeed, nonce }
+//     return row;
+//   }
+  
 
 }
 

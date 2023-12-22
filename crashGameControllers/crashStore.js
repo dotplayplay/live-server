@@ -42,6 +42,16 @@ const handleMoonTrendballEl = (async(game)=>{
    });
 })
 
+    //================== update payout and crash hash ===========================
+    const handleRedTrendballEl = (async (game) => {
+      await crash_game.updateMany({
+        game_id: game.game_id,
+        game_type: "Red"
+      }, {
+        game_status: false,
+        payout: game.crashpoint,
+        game_hash: game.hash
+      })
+    })
 
-
-module.exports = { handleCrashHistory,handleGameCrash , handleMoonTrendballEl}
+module.exports = { handleCrashHistory,handleGameCrash ,handleRedTrendballEl, handleMoonTrendballEl}
