@@ -26,6 +26,7 @@ app.get("/", (req, res)=>{
   res.send("Welcome to dotplayplay Live server")
 })
 
+
 app.use("/", seApp);
 mongoose.set('strictQuery', false);
 // const dbUri = `mongodb://localhost:27017/dpp`
