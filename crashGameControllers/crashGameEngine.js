@@ -33,7 +33,7 @@ const fetchHashseed = (async()=>{
 
 const io = new Server(httpServer, {
     cors: {
-        origin:"https://dotplayplay.netlify.app"
+        origin:"https://wager.services"
         // origin: "http://localhost:5173"
     },
 });
@@ -78,6 +78,8 @@ const autobetWallet = (async(event)=>{
       }
     
     //  io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
+
+
      await CrashGame.updateOne({
         user_id:event.user_id,
         game_id:event.game_id,
@@ -129,6 +131,7 @@ const GetRedtrendWallet = (async(event, game_id)=>{
       }
     
 
+
         await CrashGame.updateOne({
             user_id:event.user_id,
             game_id:game_id,
@@ -143,6 +146,7 @@ const GetRedtrendWallet = (async(event, game_id)=>{
          })
     // io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
     // io.emit("crash-all-redball-users", "is-crash")
+
 })
 
 
@@ -203,6 +207,7 @@ const GetGreentrendWallet = (async(event, game_id)=>{
     
     //  io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
 
+
     await CrashGame.updateOne({
         user_id:event.user_id,
         game_id:game_id,
@@ -230,7 +235,6 @@ const handleGreenTrendballEl = (async(game)=>{
         game_hash:game.hash
      })
 })
-
 
 //  ====== Green trend ball lost ============
 const handleGreenTrendball = (async(game)=>{
@@ -274,7 +278,6 @@ const GetMoontrendWallet = (async(event, game_id)=>{
       }
     
     //  io.emit("redball_update_wallet", {update_bal:current_amount, ...event})
-
         await CrashGame.updateOne({
             user_id:event.user_id,
             game_id:game_id,
