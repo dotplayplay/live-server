@@ -37,7 +37,6 @@ class SSE {
     });
     this.res.write('SERVER EVENTS:::>\n\n');
   }
-
   emit(event, data) {
     this.res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   }
@@ -64,13 +63,13 @@ class CrashGameEngine {
     // ==================== fetch single active users bets ==================================
     async fetchUsersBets(){
       const data = await CrashGame.find()
-      this.broadcast("my-bet", data)
+      // this.broadcast("my-bet", data)
     }
 
 async fetch_activePlayers(game_id){
     try {
       const data = await CrashGame.find({game_id, game_status: true})
-      this.broadcast("active_players", data)
+      // this.broadcast("active_players", data)
       // this.broadcast("crash-game-redtrend", data)
     }
     catch (error) {
@@ -336,7 +335,7 @@ async fetch_activePlayers(game_id){
         } else {
           count = 586.6
         }
-        this.broadcast("nuppp-curve", count.toFixed(2))
+        // this.broadcast("nuppp-curve", count.toFixed(2))
       }, 5)
     }
 
@@ -905,7 +904,6 @@ async fetch_activePlayers(game_id){
               // handle_h_fourty(0.3, 1)
               // handle_h_thirthy(0.3, 0)
             }
-
           }
           if (multiplierEL.toFixed(2) > 200 && multiplierEL.toFixed(2) < 500) {
             // handle_V_Hundred(0.1, 0)
