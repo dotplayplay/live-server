@@ -5,7 +5,7 @@ const { createsocket } = require("./crashGameControllers/crashGameEngine.js");
 const seApp = require("./crashGameControllers/crashGameEngineSE");
 require("dotenv").config();
 require("./crashGameControllers/genarateHash");
-require("./crashGameControllers/generate-seed")
+// require("./crashGameControllers/generate-seed")
 
 // ========================= socket =============
 const { createServer } = require("node:http");
@@ -25,7 +25,6 @@ main()
 app.get("/", (req, res)=>{
   res.send("Welcome to dotplayplay Live server")
 })
-
 
 app.use("/", seApp);
 mongoose.set('strictQuery', false);
