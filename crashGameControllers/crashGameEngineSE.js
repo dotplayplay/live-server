@@ -58,8 +58,6 @@ class CrashGameEngine {
   }
 
   // async start() {
-
-
     // ==================== fetch single active users bets ==================================
     async fetchUsersBets(){
       const data = await CrashGame.find()
