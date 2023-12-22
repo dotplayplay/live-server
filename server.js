@@ -1,10 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require('mongoose');
-const { createsocket } = require("./crashGameControllers/crashGameEngine.js");
+// const { createsocket } = require("./crashGameControllers/crashGameEngine.js");
 const seApp = require("./crashGameControllers/crashGameEngineSE");
 require("dotenv").config();
-require("./crashGameControllers/genarateHash");
+// require("./crashGameControllers/genarateHash");
 // require("./crashGameControllers/generate-seed")
 
 // ========================= socket =============
@@ -18,9 +18,9 @@ app.use(cors());
 const server = createServer(app)
 
 async function main() {
-  createsocket(server);
+  // createsocket(server);
 }
-main()
+// main()
 
 app.get("/", (req, res)=>{
   res.send("Welcome to dotplayplay Live server")
