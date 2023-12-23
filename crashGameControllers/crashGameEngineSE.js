@@ -333,7 +333,7 @@ async fetch_activePlayers(game_id){
         } else {
           count = 586.6
         }
-        // this.broadcast("nuppp-curve", count.toFixed(2))
+        this.broadcast("nuppp-curve", count.toFixed(2))
       }, 5)
     }
 
