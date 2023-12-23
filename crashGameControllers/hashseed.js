@@ -7,7 +7,7 @@ function crashPointFromHash(gameHash) {
   const int = parseInt(hex, 16);
   const crashpoint = Math.max(1, (Math.pow(2, 32) / (int + 1)) * (1 - 0.01)).toFixed(3);
   const rounddown = (Math.floor(crashpoint * 100) / 100).toFixed(2);
-  let row = { hash: gameHash.game_hash, crashpoint: rounddown, game_id: gameHash.game_id};
+  let row = { hash: gameHash.game_hash, crash_point: rounddown, game_id: gameHash.game_id};
   return row
 }
 
