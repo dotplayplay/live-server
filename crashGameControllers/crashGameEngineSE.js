@@ -26,7 +26,6 @@ const cors = require('cors')({
 const sseApp = express();
 sseApp.use(cors);
 
-
 class SSE {
   constructor(res) {
     this.res = res;
@@ -50,6 +49,7 @@ class CrashGameEngine {
     this.clients = [];
     this.hashList = [];
     this.load_animate = 100
+    this.pre_crashId = []
 
     process.on('beforeExit', () => {
       console.log("Stoping game");
@@ -75,9 +75,16 @@ async fetch_activePlayers(game_id){
     }
 }
 
+ 
   async fetchPreviousCrashHistory(event){
     try{
-      this.broadcast("crash-game-history", event)
+      if(this.pre_crashId.length > 21){
+        this.pre_crashId.shift()
+        this.pre_crashId.push(event)
+      }else{
+        this.pre_crashId.push(event)
+      }
+      this.broadcast("crash-game-history", this.pre_crashId)
     }catch(error){
       console.log(error)
     }
@@ -649,7 +656,7 @@ async fetch_activePlayers(game_id){
     // //  =================================== All game crash handler ===================================
 
     handleCrashed(crash_point){
-      let data = { game_id: crash_point.game_id, game_hash: crash_point.hash, crash_point: crash_point.crashpoint}
+      let data = { game_id: crash_point.game_id, game_hash: crash_point.hash, crash_point: crash_point.crash_point}
       this.broadcast("crash-details", data)
       handleCrashHistory(crash_point)
       handleGameCrash(crash_point)
@@ -705,7 +712,7 @@ async fetch_activePlayers(game_id){
       let triggerEk = 1
       game.HandlecrashCurve(34)
       this.multiplier = setInterval(async () => {
-        if (multiplierEL >= crash_point.crashpoint) {
+        if (multiplierEL >= crash_point.crash_point) {
           clearInterval(this.multiplier);
           if (multiplierEL.toFixed(2) < 2) {
             // handleRedtrendballCashout(crash_point.game_id)
