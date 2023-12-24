@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require('mongoose');
-// const { createsocket } = require("./crashGameControllers/crashGameEngine.js");
+const { createsocket } = require("./crashGameControllers/crashGameEngine.js");
 const seApp = require("./crashGameControllers/crashGameEngineSE");
 require("dotenv").config();
 // require("./crashGameControllers/genarateHash");
@@ -18,9 +18,9 @@ app.use(cors());
 const server = createServer(app)
 
 async function main() {
-  // createsocket(server);
+  createsocket(server);
 }
-// main()
+main()
 
 app.get("/", (req, res)=>{
   res.send("Welcome to dotplayplay Live server")
@@ -35,6 +35,6 @@ mongoose.connect(dbUri, { useNewUrlParser: true,  useUnifiedTopology: true })
     .then((result)=>  console.log('Database connected'))
   .catch((err) => console.log(err))
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, ()=>{
+server.listen(PORT, ()=>{
     console.log("Running on port "+ PORT)
 })

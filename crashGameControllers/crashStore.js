@@ -17,19 +17,21 @@ const handleUpdateHash = (async(event)=>{
 
 
 const handleGameCrash = (async(event)=>{
-handleUpdateHash(event)
+
+  handleUpdateHash(event)
    await crash_game.updateMany({ game_type: "Classic", user_status: true }, {
       has_won: false,
       user_status: false,
       cashout: 0,
       profit: 0
-     });
+    });
 
-     await crash_game.updateMany({ game_type: "Classic", game_id: event.game_id }, {
+    await crash_game.updateMany({ game_type: "Classic", game_id: event.game_id }, {
       game_hash: event.hash,
       payout: event.crash_point,
       game_status: false,
      });
+
 })
 
 

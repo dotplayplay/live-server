@@ -16,6 +16,7 @@ const USDT_wallet = require("../model/Usdt-wallet")
 const PPFWallet = require("../model/PPF-wallet");
 let is_consumed = 1
 
+
 const express = require('express')
 const cors = require('cors')({
   origin: [
@@ -67,7 +68,7 @@ class CrashGameEngine {
 async fetch_activePlayers(game_id){
     try {
       const data = await CrashGame.find({game_id, game_status: true})
-      // this.broadcast("active_players", data)
+      this.broadcast("active_players", data)
       // this.broadcast("crash-game-redtrend", data)
     }
     catch (error) {
@@ -1020,5 +1021,6 @@ sseApp.get('/events', (req, res) => {
 
 // game.start();
 // game.startCountDown(5);
+let from = game.fetch_activePl
 game.fetchHashes();
 module.exports = sseApp
