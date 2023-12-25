@@ -1,26 +1,41 @@
 const { Server } = require("socket.io")
 const { format } = require('date-fns');
 const crypto =  require("crypto")
-const currentTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-const {crashPointFromHash} = require("./hashseed")
-const { handleCrashHistory, handleGameCrash , handleMoonTrendballEl} = require("./crashStore.js")
-const { handleProfileTransactions } = require("../profile_mangement/index")
-const { handleRechargeimplement } = require("../profile_mangement/cashbacks")
-const { handleMonthlyCashbackImplementation } = require("../profile_mangement/monthlycashback")
-const { handleWeeklyCashbackImplementation } = require("../profile_mangement/week_cashback")
-const {  } = require("./crashGameEngineSE.js")
-const CrashHash = require("../model/crash_hash")
-const CrashGame = require("../model/crashgame")
-const CrashHistory = require("../model/crash-game-history")
-const CashBackDB = require("../model/cash_back")
-const Wallet = require("../model/wallet")
-const USDT_wallet = require("../model/Usdt-wallet")
-const PPFWallet = require("../model/PPF-wallet");
-let is_consumed = 1
+// const currentTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+// const {crashPointFromHash} = require("./hashseed")
+// const { handleCrashHistory, handleGameCrash , handleMoonTrendballEl} = require("./crashStore.js")
+// const { handleProfileTransactions } = require("../profile_mangement/index")
+// const { handleRechargeimplement } = require("../profile_mangement/cashbacks")
+// const { handleMonthlyCashbackImplementation } = require("../profile_mangement/monthlycashback")
+// const { handleWeeklyCashbackImplementation } = require("../profile_mangement/week_cashback")
+// const CrashHash = require("../model/crash_hash")
+// const CrashGame = require("../model/crashgame")
+// const CrashHistory = require("../model/crash-game-history")
+// const CashBackDB = require("../model/cash_back")
+// const Wallet = require("../model/wallet")
+// const USDT_wallet = require("../model/Usdt-wallet")
+// const PPFWallet = require("../model/PPF-wallet");
+// let is_consumed = 1
 
 
 async function createsocket(httpServer){
-   
+    const io = new Server(httpServer, {
+        cors: {
+            origin:"https://dotplayplay.netlify.app",
+            // origin: "http://localhost:5173",
+            methods: ["GET", "POST"],
+            credentials: true
+        },
+    });
+
+    let pck = 1000000
+    const handleCrashBet = ()=>{
+        setInterval(()=>{
+            pck -= 0.01
+            io.emit("crasyu", pck)
+        },100)
+    }
+    handleCrashBet()
 }
 
 

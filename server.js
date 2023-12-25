@@ -2,14 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require('mongoose');
 const { createsocket } = require("./crashGameControllers/crashGameEngine.js");
-const seApp = require("./crashGameControllers/crashGameEngineSE");
+// const seApp = require("./crashGameControllers/crashGameEngineSE");
 require("dotenv").config();
-// require("./crashGameControllers/genarateHash");
-// require("./crashGameControllers/generate-seed")
+// // require("./crashGameControllers/genarateHash");
+// // require("./crashGameControllers/generate-seed")
 
-// ========================= socket =============
+// // ========================= socket =============
 const { createServer } = require("node:http");
-// ============ Initilize the app ========================
+// // ============ Initilize the app ========================
 
 const app = express();
 app.use(express.json());
@@ -23,13 +23,13 @@ async function main() {
 main()
 
 app.get("/", (req, res)=>{
-  res.send("Welcome to dotplayplay Live server")
+  res.send("Crash server is running perfectly!!")
 })
 
-app.use("/", seApp);
+// // app.use("/", seApp);
 mongoose.set('strictQuery', false);
-// const dbUri = `mongodb://localhost:27017/dpp`
-const dbUri = `mongodb+srv://highscoreteh:eNiIQbm4ZMSor8VL@cluster0.xmpkpjc.mongodb.net/main_page?retryWrites=true&w=majority`
+const dbUri = `mongodb://localhost:27017/dpp`
+// const dbUri = `mongodb+srv://highscoreteh:eNiIQbm4ZMSor8VL@cluster0.xmpkpjc.mongodb.net/main_page?retryWrites=true&w=majority`
 
 mongoose.connect(dbUri, { useNewUrlParser: true,  useUnifiedTopology: true })
     .then((result)=>  console.log('Database connected'))
