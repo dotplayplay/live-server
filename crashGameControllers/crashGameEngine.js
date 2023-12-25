@@ -1,50 +1,87 @@
-const { Server } = require("socket.io")
-const { format } = require('date-fns');
-const crypto =  require("crypto")
-// const currentTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-// const {crashPointFromHash} = require("./hashseed")
-// const { handleCrashHistory, handleGameCrash , handleMoonTrendballEl} = require("./crashStore.js")
-// const { handleProfileTransactions } = require("../profile_mangement/index")
-// const { handleRechargeimplement } = require("../profile_mangement/cashbacks")
-// const { handleMonthlyCashbackImplementation } = require("../profile_mangement/monthlycashback")
-// const { handleWeeklyCashbackImplementation } = require("../profile_mangement/week_cashback")
-// const CrashHash = require("../model/crash_hash")
-// const CrashGame = require("../model/crashgame")
-// const CrashHistory = require("../model/crash-game-history")
-// const CashBackDB = require("../model/cash_back")
-// const Wallet = require("../model/wallet")
-// const USDT_wallet = require("../model/Usdt-wallet")
-// const PPFWallet = require("../model/PPF-wallet");
-// let is_consumed = 1
+const express = require('express')
+const cors = require('cors')({
+  origin: [
+    // 'http://localhost:5173',
+     "https://dotplayplay.netlify.app"
+  ],
+});
 
+const sseApp = express();
+sseApp.use(cors);
 
-async function createsocket(httpServer){
-    const io = new Server(httpServer, {
-        cors: {
-            origin:"https://dotplayplay.netlify.app",
-            // origin: "http://localhost:5173",
-            methods: ["GET", "POST"],
-            credentials: true
-        },
+class SSE {
+  constructor(res) {
+    this.res = res;
+    this.res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive'
     });
+    this.res.write('SERVER EVENTS:::>\n\n');
+  }
+  emit(event, data) {
+    this.res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+  }
+}
 
-    let pck = 1000000
-    const handleCrashBet = ()=>{
-        setInterval(()=>{
-            pck -= 0.01
-            io.emit("crasyu", pck)
-        },100)
+class CrashGameEngine {
+    constructor() {
+      this.timeLoop = null;
+      this.multiplier = null;
+      this.crashCurve = null;
+      this.clients = [];
+      this.hashList = [];
+      this.load_animate = 1000000
+      this.pre_crashId = []
+  
+      process.on('beforeExit', () => {
+        console.log("Stoping game");
+        this.stop();
+      })
     }
-    handleCrashBet()
+
+    registerEvents(req, res) {
+    const clientId = Date.now();
+    const newClient = {
+      id: clientId,
+      event: new SSE(res)
+    };
+    this.clients.push(newClient);
+    req.on('close', () => {
+      console.log(`${clientId} Connection closed`);
+      this.clients = this.clients.filter(client => client.id !== clientId);
+    });
+  }
+
+  stop() {
+    if (this.multiplier) clearInterval(this.multiplier);
+    if (this.timeLoop) clearInterval(this.timeLoop);
+    if (this.crashCurve) clearInterval(this.crashCurve);
+    if (this.countDown) clearInterval(this.countDown);
+  }
+
+    broadcast(event, data) {
+        if (!this.clients.length) return;
+        this.clients.forEach(client => {
+        client.event.emit(event, data);
+        });
+    }
+
+  handleCrashLoad(){
+    setInterval(()=>{
+        this.load_animate -= 0.01
+        this.broadcast("crash-plucj",  this.load_animate )
+    },100)
+  }
 }
 
+const game = new CrashGameEngine();
+sseApp.get('/events', (req, res) => {
+  game.registerEvents(req, res);
+});
 
-
-
-module.exports = {
-    createsocket
-}
-
+game.handleCrashLoad()
+module.exports = sseApp
 
 
 // async function createsocket(httpServer){

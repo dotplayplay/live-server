@@ -1001,7 +1001,7 @@
 //           let pis = {timeSec,load_animate :this.load_animate, game_id:detail.game_id  }
 //           this.broadcast("countdown", pis)
 //           // this.broadcast("load-animation", load_animate)
-//           // this.broadcast("game_id", detail.game_id)
+//         //   this.broadcast("game_id", detail.game_id)
 //         }
 //       }, 10);
 //       // this.countDown = setInterval(() => {
@@ -1021,6 +1021,5 @@
 
 // // game.start();
 // // game.startCountDown(5);
-// let from = game.fetch_activePl
 // game.fetchHashes();
 // module.exports = sseApp
