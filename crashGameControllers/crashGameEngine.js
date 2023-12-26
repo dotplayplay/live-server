@@ -71,18 +71,17 @@ class CrashGameEngine {
     setInterval(()=>{
         this.load_animate -= 0.01
         this.broadcast("crash-plucj",  this.load_animate )
-    },100)
+    },50)
   }
 }
 
 const game = new CrashGameEngine();
-sseApp.get('/events', (req, res) => {
+sseApp.get('/crash-engine', (req, res) => {
   game.registerEvents(req, res);
-});
+})
 
 game.handleCrashLoad()
 module.exports = sseApp
-
 
 // async function createsocket(httpServer){
 // let hashList = []

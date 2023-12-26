@@ -16,7 +16,6 @@
 // const PPFWallet = require("../model/PPF-wallet");
 // let is_consumed = 1
 
-
 // const express = require('express')
 // const cors = require('cors')({
 //   origin: [
@@ -942,7 +941,7 @@
 
 //   broadcast(event, data) {
 //     if (!this.clients.length) return;
-//     this.clients.forEach(client => {
+//     this.clients.forEach(client => { 
 //       client.event.emit(event, data);
 //     });
 //   }

@@ -1,26 +1,16 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require('mongoose');
-// const { createsocket } = require("./crashGameControllers/crashGameEngine.js");
 const seApp = require("./crashGameControllers/crashGameEngine");
 require("dotenv").config();
-// // require("./crashGameControllers/genarateHash");
-// // require("./crashGameControllers/generate-seed")
+// require("./crashGameControllers/genarateHash");
+// require("./crashGameControllers/generate-seed")
 
-// // ========================= socket =============
-// const { createServer } = require("node:http");
-// // ============ Initilize the app ========================
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-// const server = createServer(app)
-
-// async function main() {
-//   createsocket(server);
-// }
-// main()
 
 app.get("/", (req, res)=>{
   res.send("Crash server is running perfectly!!")
