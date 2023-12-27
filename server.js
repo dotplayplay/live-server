@@ -6,7 +6,6 @@ require("dotenv").config();
 // require("./crashGameControllers/genarateHash");
 // require("./crashGameControllers/generate-seed")
 
-
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
