@@ -28,23 +28,23 @@ class SSE {
 }
 
 class CrashGameEngine {
-    constructor() {
-      this.timeLoop = null;
-      this.multiplier = null;
-      this.crashCurve = null;
-      this.clients = [];
-      this.hashList = [];
-      this.load_animate = 100
-      this.pre_crashId = []
-      this.is_consumed = 1
-  
-      process.on('beforeExit', () => {
-        console.log("Stoping game");
-        this.stop();
-      })
-    }
+  constructor() {
+    this.timeLoop = null;
+    this.multiplier = null;
+    this.crashCurve = null;
+    this.clients = [];
+    this.hashList = [];
+    this.load_animate = 100
+    this.pre_crashId = []
+    this.is_consumed = 1
 
-    registerEvents(req, res) {
+    process.on('beforeExit', () => {
+      console.log("Stoping game");
+      this.stop();
+    })
+  }
+
+  registerEvents(req, res) {
     const clientId = Date.now();
     const newClient = {
       id: clientId,
@@ -62,7 +62,7 @@ class CrashGameEngine {
     if (this.timeLoop) clearInterval(this.timeLoop);
     if (this.crashCurve) clearInterval(this.crashCurve);
     if (this.countDown) clearInterval(this.countDown);
-  }
+  } 
 
   broadcast(event, data) {
       if (!this.clients.length) return;
@@ -71,7 +71,7 @@ class CrashGameEngine {
       });
   }
 
-     handleCrashed(crash_point){
+   handleCrashed(crash_point){
       let data = { game_id: crash_point.game_id, game_hash:crash_point.hash, crash_point_stop: crash_point.crash_point,  is_running: false, is_loading: false, is_crashed: true}
       this.broadcast("countdown", data)
       // handleCrashHistory(crash_point)
@@ -112,13 +112,25 @@ class CrashGameEngine {
       // h_two = 18
     }
 
+  HandlecrashCurve(event){
+      let count = 0
+      this.crashCurve = setInterval(() => {
+        if (count < 590) {
+          count += 0.34
+        } else {
+          count = 586.6
+        }
+        this.broadcast("nuppp-curve", count.toFixed(2))
+    }, 5)
+  }
+
   HandleMultiplier(point){
       let crash_point = point
       let multiplierEL = 1
       let speed = 0.01
       let trigger = 1
       let triggerEk = 1
-      // game.HandlecrashCurve(34)
+      game.HandlecrashCurve(34)
       this.multiplier = setInterval(async () => {
         if (multiplierEL >= crash_point.crash_point) {
           clearInterval(this.multiplier);
