@@ -1,6 +1,7 @@
 const express = require('express')
 const { crashPointFromHash } = require("./hashseed")
 const CrashHash = require("../model/crash_hash")
+const { handleCrashHistory, handleGameCrash,handleRedTrendballEl, handleMoonTrendballEl } = require("./crashStore.js")
 
 const cors = require('cors')({
   origin: [
@@ -37,6 +38,8 @@ class CrashGameEngine {
     this.load_animate = 100
     this.pre_crashId = []
     this.is_consumed = 1
+    this.v_default = 0;
+    this.v_two = 0
 
     process.on('beforeExit', () => {
       console.log("Stoping game");
@@ -71,52 +74,34 @@ class CrashGameEngine {
       });
   }
 
-   handleCrashed(crash_point){
-      let data = { game_id: crash_point.game_id, game_hash:crash_point.hash, crash_point_stop: crash_point.crash_point,  is_running: false, is_loading: false, is_crashed: true}
-      this.broadcast("countdown", data)
-      // handleCrashHistory(crash_point)
-      // handleGameCrash(crash_point)
-      // handleRedTrendballEl(crash_point)
-      // game.fetchUsersBets()
-      // handleGreenTrendballEl(crash_point)
-      // handleMoonTrendballEl(crash_point)
-      // auto = []
-      // v_five = 0
-      // v_default = 0
-      // v_two = 0
-      // v_three = 0
-      // v_seven = 0
-      // v_nine = 0
-      // v_twenty = 0
-      // v_ten = 0
-      // v_hundred = 0
-      // v_FiveHundred = 0
-      // v_thousand = 0
-      // v_fivety = 0
-      // v_Twohundred = 0
-
-      // h_hundred = 100
-      // h_eighty = 100
-      // h_sixty = 100
-      // h_thirthy = 100
-      // h_fourty = 100
-      // h_twenty = 100
-      // h_eighteen = 100
-      // h_sixteen = 100
-      // h_fourteen = 100
-      // h_ten = 100
-      // h_twelve = 100
-      // h_eight = 78
-      // h_four = 38
-      // h_six = 58
-      // h_two = 18
+  handleCrashHistoryUpdate(data){
+    if(this.pre_crashId.length > 30){
+      this.pre_crashId.shift(data)
+      this.pre_crashId.push(data)
+    }else{
+      this.pre_crashId.push(data)
     }
+    this.broadcast("crash_details", this.pre_crashId)
+  }
+
+   handleCrashed(crash_point){
+    let data = { game_id: crash_point.game_id, game_hash:crash_point.hash, crash_point_stop: crash_point.crash_point,  is_running: false, is_loading: false, is_crashed: true}
+    this.broadcast("countdown", data)
+    handleCrashHistory(crash_point)
+    handleGameCrash(crash_point)
+    handleRedTrendballEl(crash_point)
+    // game.fetchUsersBets()
+    game.handleCrashHistoryUpdate(crash_point)
+    // handleGreenTrendballEl(crash_point)
+    // handleMoonTrendballEl(crash_point)
+    // auto = []
+  }
 
   HandlecrashCurve(event){
       let count = 0
       this.crashCurve = setInterval(() => {
         if (count < 590) {
-          count += 0.34
+          count += 0.94
         } else {
           count = 586.6
         }
@@ -350,8 +335,8 @@ class CrashGameEngine {
           this.broadcast("countdown", { crash_point: multiplierEL.toFixed(2), is_running: true, is_loading: false, is_crashed: false})
         }
         multiplierEL += speed;
-      }, 90);
-    }
+      }, 50);
+  }
 
 async fetchHashes(){
     try {
