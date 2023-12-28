@@ -2,7 +2,7 @@ const express = require('express')
 const { crashPointFromHash } = require("./hashseed")
 const CrashHash = require("../model/crash_hash")
 const { handleCrashHistory, handleGameCrash,handleRedTrendballEl, handleMoonTrendballEl } = require("./crashStore.js")
-
+// 
 const cors = require('cors')({
   origin: [
     // 'http://localhost:5173',
