@@ -1,4 +1,5 @@
-const CrashHash = require("../model/crash_hash")
+const CrashHash = require("../model/crash_hash");
+const CrashGameHash = require("../model/crashgamehash");
 const crypto = require('crypto');
 
 
